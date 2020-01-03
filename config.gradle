@@ -1,0 +1,22 @@
+/*
+1.统一性
+2.便于管理
+3.版本控制
+*/
+
+ext {
+    //Android配置
+    android = [
+            compileSdkVersion: 29,
+            buildToolsVersion: "29.0.2",
+            applicationId    : "com.example.meet",
+            minSdkVersion    : 21,
+            targetSdkVersion : 29,
+            versionCode      : 1,
+            versionName      : "1.0"
+    ]
+    //依赖配置
+    dependencies = [
+            "appcompat": 'androidx.appcompat:appcompat:1.1.0'
+    ]
+}
