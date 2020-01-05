@@ -20,7 +20,7 @@ import java.util.Date;
  */
 public class LogUtils {
 
-    private static SimpleDateFormat mSimpleDateFormat=new SimpleDateFormat ("YYYY-MM-dd HH:mm:ss");
+    private static SimpleDateFormat mSimpleDateFormat = new SimpleDateFormat ("yyyy-MM-dd HH:mm:ss");
 
     public static void i(String text) {
 
@@ -41,31 +41,46 @@ public class LogUtils {
             }
         }
     }
-    public static void writeToFile(String text){
+
+    public static void writeToFile(String text) {
         //文件路径
-        String fileName="/sdcard/Meet/Meet.log";
+        String fileName = "/sdcard/Meet/Meet.log";
         //Time +  Content
-        String log=mSimpleDateFormat.format (new Date ())+" "+text;
+        String log = mSimpleDateFormat.format (new Date ()) + " " + text + "\n";
         //检测父路径
-        File fileGroup=new File ("/sdcard/Meet/");
-        if(!fileGroup.exists ())
-        {
-           fileGroup.mkdirs ();
+        File fileGroup = new File ("/sdcard/Meet/");
+        if (!fileGroup.exists ()) {
+            boolean result = fileGroup.mkdirs ();
+            if (result) {
+                Log.i ("Meet", "writeToFile: ");
+            }
         }
+
+/*
+        File file =new File ("/sdcard/Meet/Meet.log");
+        if(!file.exists ()){
+            try {
+                file.createNewFile ();
+            } catch (IOException e) {
+                e.printStackTrace ();
+            }
+        }*/
+
+
         //开始写入
-        FileOutputStream fileOutputStream=null;
-        BufferedWriter bufferedWriter=null;
-        try{
-            fileOutputStream=new FileOutputStream (fileGroup,true);
+        FileOutputStream fileOutputStream = null;
+        BufferedWriter bufferedWriter = null;
+        try {
+            fileOutputStream = new FileOutputStream (fileName, true);
             //编码 GBK 正确存入中文
-            bufferedWriter=new BufferedWriter (new OutputStreamWriter (fileOutputStream, Charset.forName ("gbk")));
+            bufferedWriter = new BufferedWriter (new OutputStreamWriter (fileOutputStream, Charset.forName ("gbk")));
             bufferedWriter.write (log);
         } catch (FileNotFoundException e) {
             e.printStackTrace ();
         } catch (IOException e) {
             e.printStackTrace ();
-        }finally {
-            if(bufferedWriter!=null){
+        } finally {
+            if (bufferedWriter != null) {
                 try {
                     bufferedWriter.close ();
                     ///
