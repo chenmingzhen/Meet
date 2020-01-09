@@ -11,7 +11,7 @@ import android.view.View;
  */
 public class SystemUI {
 
-    public static void  fixSystemUI(Activity mActivity){
+    public static void fixSystemUI(Activity mActivity) {
 
         //沉浸式状态栏
         //5.0适配

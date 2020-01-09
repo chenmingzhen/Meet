@@ -5,29 +5,22 @@ import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
-
-import com.example.framework.utils.LogUtils;
 
 import java.io.IOException;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 
 public class MediaPlayerManager {
 
-    private MediaPlayer mMediaPlayer;
     //播放
     private static final int MEDIA_STATUS_PLAY = 0;
     //暂停
     private static final int MEDIA_STATUS_PAUSE = 1;
     //停止
     private static final int MEDIA_STATUS_STOP = 2;
-
-    private static int MEDIA_STATUS = MEDIA_STATUS_STOP;
-
     private static final int H_PROGRESS = 1000;
-
+    private static int MEDIA_STATUS = MEDIA_STATUS_STOP;
+    private MediaPlayer mMediaPlayer;
     //声明自定义接口
     private OnMusicProgressListener musicProgressListener;
 
@@ -47,10 +40,10 @@ public class MediaPlayerManager {
                         int currentPosition = getCurrentPosition ();
                         float mProgress = (float) (currentPosition);
                         float mDuration = (float) (getDuration ());
-                        int pos = (int)((mProgress / mDuration)*100);
+                        int pos = (int) ((mProgress / mDuration) * 100);
                         /*int pos =(int)(((float)currentPosition)/((float)getDuration ())*100);*/
-                        musicProgressListener.onProgress (currentPosition,pos);
-                        mHandler.sendEmptyMessageDelayed (H_PROGRESS,1000);
+                        musicProgressListener.onProgress (currentPosition, pos);
+                        mHandler.sendEmptyMessageDelayed (H_PROGRESS, 1000);
                     }
                     break;
             }
