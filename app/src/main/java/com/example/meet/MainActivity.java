@@ -1,24 +1,19 @@
 package com.example.meet;
 
-import androidx.annotation.NonNull;
-
-import androidx.annotation.RequiresApi;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import android.Manifest;
 import android.content.pm.PackageManager;
-
 import android.content.res.AssetFileDescriptor;
-import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
-
-import android.util.Log;
 import android.widget.Toast;
 
 import com.example.framework.base.BaseUIActivity;
 import com.example.framework.manager.MediaPlayerManager;
-import com.example.framework.utils.LogUtils;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 
 public class MainActivity extends BaseUIActivity {
@@ -30,8 +25,8 @@ public class MainActivity extends BaseUIActivity {
         setContentView (R.layout.activity_main);
         //检查权限
         checkPermission ();
-        final MediaPlayerManager mMediaPlayerManager=new MediaPlayerManager ();
-        AssetFileDescriptor fileDescriptor=getResources ().openRawResourceFd (R.raw.mymusic);
+        final MediaPlayerManager mMediaPlayerManager = new MediaPlayerManager ();
+        AssetFileDescriptor fileDescriptor = getResources ().openRawResourceFd (R.raw.mymusic);
         mMediaPlayerManager.startPlay (fileDescriptor);
 
         mMediaPlayerManager.setOnProgressListener (new MediaPlayerManager.OnMusicProgressListener () {
@@ -42,7 +37,7 @@ public class MainActivity extends BaseUIActivity {
         });
     }
 
-    private void checkPermission(){
+    private void checkPermission() {
         //申请权限  注意 要两个权限都申请
         if (ContextCompat.checkSelfPermission (MainActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) !=
                 PackageManager.PERMISSION_GRANTED || ContextCompat.checkSelfPermission
