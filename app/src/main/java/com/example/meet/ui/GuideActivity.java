@@ -175,23 +175,23 @@ public class GuideActivity extends BaseUIActivity implements View.OnClickListene
 
     @Override
     public void onClick(View v) {
-       switch (v.getId ()){
-           case R.id.iv_music_switch:
-               if(mGuideMusic.MEDIA_STATUS==MediaPlayerManager.MEDIA_STATUS_PAUSE){
-                   mAnim.start ();
-                   mGuideMusic.continuePlay ();
-                   iv_music_switch.setImageResource (R.drawable.img_guide_music);
-               }else if(mGuideMusic.MEDIA_STATUS==MediaPlayerManager.MEDIA_STATUS_PLAY){
-                   mAnim.pause ();
-                   mGuideMusic.pausePlay ();
-                   iv_music_switch.setImageResource (R.drawable.img_guide_music_off);
-               }
-               break;
-           case R.id.tv_guide_skip:
-               startActivity (new Intent (GuideActivity.this,LoginActivity.class));
-               finish ();
-               break;
-       }
+        switch (v.getId ()){
+            case R.id.iv_music_switch:
+                if(mGuideMusic.MEDIA_STATUS==MediaPlayerManager.MEDIA_STATUS_PAUSE){
+                    mAnim.start ();
+                    mGuideMusic.continuePlay ();
+                    iv_music_switch.setImageResource (R.drawable.img_guide_music);
+                }else if(mGuideMusic.MEDIA_STATUS==MediaPlayerManager.MEDIA_STATUS_PLAY){
+                    mAnim.pause ();
+                    mGuideMusic.pausePlay ();
+                    iv_music_switch.setImageResource (R.drawable.img_guide_music_off);
+                }
+                break;
+            case R.id.tv_guide_skip:
+                startActivity (new Intent (GuideActivity.this,LoginActivity.class));
+                finish ();
+                break;
+        }
     }
 
     @Override
