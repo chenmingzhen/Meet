@@ -13,13 +13,13 @@ import androidx.annotation.RequiresApi;
 public class MediaPlayerManager {
 
     //播放
-    private static final int MEDIA_STATUS_PLAY = 0;
+    public static final int MEDIA_STATUS_PLAY = 0;
     //暂停
-    private static final int MEDIA_STATUS_PAUSE = 1;
+    public static final int MEDIA_STATUS_PAUSE = 1;
     //停止
-    private static final int MEDIA_STATUS_STOP = 2;
+    public static final int MEDIA_STATUS_STOP = 2;
     private static final int H_PROGRESS = 1000;
-    private static int MEDIA_STATUS = MEDIA_STATUS_STOP;
+    public  static int MEDIA_STATUS = MEDIA_STATUS_STOP;
     private MediaPlayer mMediaPlayer;
     //声明自定义接口
     private OnMusicProgressListener musicProgressListener;
@@ -60,11 +60,10 @@ public class MediaPlayerManager {
      *
      * @param path
      */
-    @RequiresApi(api = Build.VERSION_CODES.N)
     public void startPlay(AssetFileDescriptor path) {
         mMediaPlayer.reset ();
         try {
-            mMediaPlayer.setDataSource (path);
+            mMediaPlayer.setDataSource (path.getFileDescriptor (),path.getStartOffset (),path.getLength ());
             mMediaPlayer.prepare ();
             mMediaPlayer.start ();
             MEDIA_STATUS = MEDIA_STATUS_PLAY;
