@@ -6,7 +6,7 @@
     android:orientation="vertical"
     tools:context=".ui.GuideActivity">
 
-    <!--注意层次关系 否则按钮会没响应-->
+    <!--注意层次关系 否则按钮会没响应 -->
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/mViewPager"
         android:layout_width="match_parent"
