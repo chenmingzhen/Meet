@@ -25,16 +25,6 @@ public class MainActivity extends BaseUIActivity {
         setContentView (R.layout.activity_main);
         //检查权限
         checkPermission ();
-        final MediaPlayerManager mMediaPlayerManager = new MediaPlayerManager ();
-        AssetFileDescriptor fileDescriptor = getResources ().openRawResourceFd (R.raw.mymusic);
-        mMediaPlayerManager.startPlay (fileDescriptor);
-
-        mMediaPlayerManager.setOnProgressListener (new MediaPlayerManager.OnMusicProgressListener () {
-            @Override
-            public void onProgress(int progress, int pos) {
-
-            }
-        });
     }
 
     private void checkPermission() {
