@@ -6,6 +6,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
 
+import com.example.framework.base.BaseUIActivity;
 import com.example.framework.entity.Constants;
 import com.example.framework.utils.SpUtils;
 import com.example.meet.MainActivity;
@@ -17,7 +18,7 @@ import androidx.appcompat.app.AppCompatActivity;
 /**
  * 启动页
  */
-public class IndexActivity extends AppCompatActivity {
+public class IndexActivity extends BaseUIActivity {
 
     /**
      * 1.启动页全屏

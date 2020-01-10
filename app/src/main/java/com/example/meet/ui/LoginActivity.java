@@ -2,11 +2,10 @@ package com.example.meet.ui;
 
 import android.os.Bundle;
 
+import com.example.framework.base.BaseUIActivity;
 import com.example.meet.R;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends BaseUIActivity {
 
 
     @Override
