@@ -7,6 +7,7 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
+        android:name=".MyApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -14,11 +15,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar"
-        tools:ignore="GoogleAppIndexingWarning"
-        android:name=".MyApplication">
-
+        tools:ignore="GoogleAppIndexingWarning">
+        <activity android:name=".text.TouchPictureText"></activity>
         <activity android:name=".ui.LoginActivity" />
-        <activity android:name=".ui.GuideActivity" >
+        <activity android:name=".ui.GuideActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -27,17 +27,13 @@
         </activity>
         <activity
             android:name=".ui.IndexActivity"
-            android:theme="@style/AppThemeFull">
-
-        </activity>
+            android:theme="@style/AppThemeFull"></activity>
         <activity android:name=".MainActivity" />
-
-
-        <!--小米适配-->
+        <!-- 小米适配 -->
         <meta-data
             android:name="notch.config"
             android:value="portrait|landscape" />
-        <!--Oppo适配-->
+        <!-- Oppo适配 -->
         <meta-data
             android:name="android.max_aspect"
             android:value="2.2" />

@@ -5,4 +5,16 @@
     <string name="text_guide_pager_1">每个人，都是一颗孤独的星球</string>
     <string name="text_guide_pager_2">我们在黑夜中寻找光明</string>
     <string name="text_guide_pager_3">如果遇见，请面带微笑</string>
+
+    <string name="text_login_phone">电话号码</string>
+    <string name="text_login_code">验证码</string>
+    <string name="text_login_password">密码</string>
+    <string name="text_login_send">发送</string>
+    <string name="text_login_login">登录</string>
+    <string name="text_login_agreement_1">我已阅读并同意</string>
+    <string name="text_login_agreement_2"><u>用户协议</u></string>
+    <string name="text_login_phone_null">电话号码不能为空</string>
+    <string name="text_login_pw_null">密码不能为空</string>
+    <string name="text_login_code_null">验证码不能为空</string>
+    <string name="text_login_now_login_text">正在登陆..</string>
 </resources>
