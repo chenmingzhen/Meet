@@ -2,7 +2,8 @@ package com.example.meet;
 
 import android.app.Application;
 
-import com.example.framework.utils.SpUtils;
+import com.example.framework.Framework;
+
 
 /**
  * FileName:MyApplication
@@ -13,7 +14,7 @@ public class MyApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate ();
-        //初始化SharedPreference
-        SpUtils.getInstance ().initSp (getApplicationContext ());
+        Framework.getFrameWork ().initFramework (getApplicationContext ());
+
     }
 }
