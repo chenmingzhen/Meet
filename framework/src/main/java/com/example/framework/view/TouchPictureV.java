@@ -9,6 +9,7 @@ import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Toast;
 
 import com.example.framework.R;
 
@@ -52,7 +53,12 @@ public class TouchPictureV extends View {
 
     private OnViewResultListener viewResultListener;
 
+    private Context mContext;
 
+    /**
+     * 设置接口回调 用于处理完成验证要执行的逻辑
+     * @param viewResultListener
+     */
     public void setViewResultListener(OnViewResultListener viewResultListener) {
         this.viewResultListener = viewResultListener;
     }
@@ -60,16 +66,19 @@ public class TouchPictureV extends View {
     public TouchPictureV(Context context) {
         super (context);
         init ();
+        this.mContext = context;
     }
 
     public TouchPictureV(Context context, @Nullable AttributeSet attrs) {
         super (context, attrs);
         init ();
+        this.mContext = context;
     }
 
     public TouchPictureV(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super (context, attrs, defStyleAttr);
         init ();
+        this.mContext = context;
     }
 
     @Override
@@ -144,7 +153,8 @@ public class TouchPictureV extends View {
         mPaintMove = new Paint ();
     }
 
-    private boolean isMove=false;
+    private boolean isMove = false;
+
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         //瞬移bug
@@ -152,11 +162,11 @@ public class TouchPictureV extends View {
             case MotionEvent.ACTION_MOVE:
                 //防止越界
                 if (event.getX () > 0 && event.getX () < (mWidth - CARD_SIZE)) {
-                   if(isMove){
-                       moveX = (int) event.getX ();
-                       //更新调用onDraw方法
-                       invalidate ();
-                   }
+                    if (isMove) {
+                        moveX = (int) event.getX ();
+                        //更新调用onDraw方法
+                        invalidate ();
+                    }
                 }
                 break;
             case MotionEvent.ACTION_UP:
@@ -167,15 +177,19 @@ public class TouchPictureV extends View {
                         moveX = 200;
                         invalidate ();
                     }
+                } else {
+                    Toast.makeText (mContext, "验证失败", Toast.LENGTH_SHORT).show ();
+                    moveX = 200;
+                    invalidate ();
                 }
                 break;
             case MotionEvent.ACTION_DOWN:
                 //判断点击的坐标是否是方块的内部，如果是就可以拖动
-                if(event.getX ()>moveX&&event.getX ()<(moveX+CARD_SIZE)
-                        &&event.getY ()>LINE_H&&event.getY ()<(LINE_H+CARD_SIZE)){
-                    isMove=true;
-                }else{
-                    isMove=false;
+                if (event.getX () > moveX && event.getX () < (moveX + CARD_SIZE)
+                        && event.getY () > LINE_H && event.getY () < (LINE_H + CARD_SIZE)) {
+                    isMove = true;
+                } else {
+                    isMove = false;
                 }
                 break;
         }

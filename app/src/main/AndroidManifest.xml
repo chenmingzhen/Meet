@@ -13,6 +13,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+        android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning">
         <activity android:name=".text.TouchPictureText"></activity>
         <activity android:name=".ui.LoginActivity" />
@@ -39,8 +40,7 @@
         <!--Bmob-->
         <provider
             android:name="cn.bmob.v3.util.BmobContentProvider"
-            android:authorities="com.example.meet.BmobContentProvider">
-        </provider>
+            android:authorities="com.example.meet.BmobContentProvider"></provider>
     </application>
 
 </manifest>
