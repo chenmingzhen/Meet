@@ -7,12 +7,11 @@ import android.os.Message;
 import android.text.TextUtils;
 
 import com.example.framework.base.BaseUIActivity;
+import com.example.framework.bmob.BmobManager;
 import com.example.framework.entity.Constants;
 import com.example.framework.utils.SpUtils;
 import com.example.meet.MainActivity;
 import com.example.meet.R;
-
-import androidx.appcompat.app.AppCompatActivity;
 
 
 /**
@@ -63,10 +62,18 @@ public class IndexActivity extends BaseUIActivity {
             SpUtils.getInstance ().putBoolean (Constants.SP_IS_FIRST_APP, false);
         } else {
             //2.如果非第一次启动，判断是否曾经登录过
-            String token = SpUtils.getInstance ().getString (Constants.SP_TOKEN,"");
-            if(TextUtils.isEmpty (token)){
-                intent.setClass (this,LoginActivity.class);
-            }else {
+            String token = SpUtils.getInstance ().getString (Constants.SP_TOKEN, "");
+            if (TextUtils.isEmpty (token)) {
+                //3.判断Bmob是否登录
+                if (BmobManager.getInstance ().isLogin ()) {
+                    //跳转到主页
+                    intent.setClass (this, MainActivity.class);
+                } else {
+                    //跳转到登录页
+                    intent.setClass (this, LoginActivity.class);
+                }
+
+            } else {
                 intent.setClass (this, MainActivity.class);
             }
         }

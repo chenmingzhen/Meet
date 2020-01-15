@@ -71,4 +71,8 @@ public class BmobManager {
     {
         BmobUser.signOrLoginByMobilePhone (phone,code,listener);
     }
+
+    public boolean isLogin(){
+        return BmobUser.isLogin ();
+    }
 }

@@ -18,15 +18,17 @@
         <activity android:name=".text.TouchPictureText"></activity>
         <activity android:name=".ui.LoginActivity" />
         <activity android:name=".ui.GuideActivity">
+
+        </activity>
+        <activity
+            android:name=".ui.IndexActivity"
+            android:theme="@style/AppThemeFull">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".ui.IndexActivity"
-            android:theme="@style/AppThemeFull"></activity>
         <activity android:name=".MainActivity" />
         <!-- 小米适配 -->
         <meta-data

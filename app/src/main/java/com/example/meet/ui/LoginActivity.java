@@ -118,6 +118,7 @@ public class LoginActivity extends BaseUIActivity implements View.OnClickListene
                     public void done(IMUser bmobUser, BmobException e) {
                         if (e == null) {
                             Toast.makeText (LoginActivity.this, "登录成功：" + BmobManager.getInstance ().getUser ().getUsername (), Toast.LENGTH_LONG).show();
+                            startActivity (new Intent (LoginActivity.this,MainActivity.class));
                         } else {
                             Toast.makeText(LoginActivity.this, "登录失败：" + e.getMessage(), Toast.LENGTH_LONG).show();
                         }
