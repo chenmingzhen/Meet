@@ -3,7 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.meet">
 
-
     <application
         android:name=".MyApplication"
         android:allowBackup="true"
@@ -15,11 +14,18 @@
         android:theme="@style/Theme.AppCompat.Light.NoActionBar"
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".text.TouchPictureText"></activity>
-        <activity android:name=".ui.LoginActivity" />
-        <activity android:name=".ui.GuideActivity">
+        <activity
+            android:name=".ui.FirstUploadActivity"
+            android:theme="@style/AppTheme"></activity>
 
-        </activity>
+        <service
+            android:name=".service.CloudService"
+            android:enabled="true"
+            android:exported="true" />
+
+        <activity android:name=".text.TouchPictureText" />
+        <activity android:name=".ui.LoginActivity" />
+        <activity android:name=".ui.GuideActivity" />
         <activity
             android:name=".ui.IndexActivity"
             android:theme="@style/AppThemeFull">
@@ -29,20 +35,27 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity" />
-        <!-- 小米适配 -->
+        <activity android:name=".MainActivity" /> <!-- 小米适配 -->
         <meta-data
             android:name="notch.config"
-            android:value="portrait|landscape" />
-        <!-- Oppo适配 -->
+            android:value="portrait|landscape" /> <!-- Oppo适配 -->
         <meta-data
             android:name="android.max_aspect"
-            android:value="2.2" />
-
-        <!--Bmob-->
+            android:value="2.2" /> <!-- Bmob -->
         <provider
             android:name="cn.bmob.v3.util.BmobContentProvider"
-            android:authorities="com.example.meet.BmobContentProvider"></provider>
+            android:authorities="com.example.meet.BmobContentProvider" />
+
+        <!--FileProvide-->
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="com.example.meet.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/filepaths" />
+        </provider>
     </application>
 
 </manifest>

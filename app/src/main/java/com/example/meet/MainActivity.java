@@ -1,19 +1,28 @@
 package com.example.meet;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.framework.base.BaseUIActivity;
+import com.example.framework.bmob.BmobManager;
+import com.example.framework.entity.Constants;
+import com.example.framework.manager.DialogManager;
 import com.example.framework.utils.LogUtils;
+import com.example.framework.utils.SpUtils;
+import com.example.framework.view.DialogView;
 import com.example.meet.fragment.ChatFragment;
 import com.example.meet.fragment.MeFragment;
 import com.example.meet.fragment.SquareFragment;
 import com.example.meet.fragment.StarFragment;
+import com.example.meet.service.CloudService;
+import com.example.meet.ui.FirstUploadActivity;
 
 import java.util.List;
 
@@ -67,6 +76,7 @@ public class MainActivity extends BaseUIActivity implements View.OnClickListener
     private MeFragment mMeFragment = null;
     private FragmentTransaction mMeTransaction = null;
 
+    private DialogView mUploadView;
 
     /**
      * 1.初始化Frahment
@@ -75,6 +85,8 @@ public class MainActivity extends BaseUIActivity implements View.OnClickListener
      * 4.恢复Fragment
      * 优化的手段
      */
+
+    
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
@@ -101,8 +113,56 @@ public class MainActivity extends BaseUIActivity implements View.OnClickListener
         tv_chat.setText (getString (R.string.text_main_chat));
         tv_me.setText (getString (R.string.text_main_me));
 
+
         initFragment ();
         checkMainTab (0);
+        //检查TOKEN
+        checkToken ();
+    }
+
+    /**
+     * //检查TOKEN
+     */
+    private void checkToken() {
+        //获取TOKEN 需要3个参数 1.用户ID，2.头像地址，3昵称
+        String token = SpUtils.getInstance ().getString (Constants.SP_TOKEN, "");
+        if (!TextUtils.isEmpty (token)) {
+            //启动云服务去连接融云服务
+            startService (new Intent (this, CloudService.class));
+        } else {
+            //1.有三个参数
+            String tokenPhoto = BmobManager.getInstance ().getUser ().getTokenPhoto ();
+            String tokenName = BmobManager.getInstance ().getUser ().getTokenNickName ();
+            if (!TextUtils.isEmpty (tokenPhoto) && !TextUtils.isEmpty (tokenName)) {
+                //创建Token
+                createToken ();
+            } else {
+                //创建上传提示框
+                createUploadDialog ();
+            }
+        }
+    }
+
+    /**
+     * 上传提示框
+     */
+    private void createUploadDialog() {
+      mUploadView= DialogManager.getInstance ().initView (this,R.layout.layout_first_upload);
+      mUploadView.setCancelable (false);
+      ImageView iv_go_upload=mUploadView.findViewById (R.id.iv_go_upload);
+      iv_go_upload.setOnClickListener (new View.OnClickListener () {
+          @Override
+          public void onClick(View v) {
+              FirstUploadActivity.startActivity (MainActivity.this);
+          }
+      });
+      DialogManager.getInstance ().show (mUploadView);
+    }
+
+    /**
+     * 创建Token
+     */
+    private void createToken() {
     }
 
     /**
@@ -288,8 +348,8 @@ public class MainActivity extends BaseUIActivity implements View.OnClickListener
      */
     @Override
     public void onAttachFragment(@NonNull Fragment fragment) {
-        if(mStarFragment!=null&& fragment instanceof StarFragment){
-            mStarFragment=(StarFragment)fragment;
+        if (mStarFragment != null && fragment instanceof StarFragment) {
+            mStarFragment = (StarFragment) fragment;
         }
         if (mSquareFragment != null && fragment instanceof SquareFragment) {
             mSquareFragment = (SquareFragment) fragment;

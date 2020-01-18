@@ -98,10 +98,10 @@ public class LoginActivity extends BaseUIActivity implements View.OnClickListene
         tv_test_login.setOnClickListener (this);
         et_phone.setText (SpUtils.getInstance ().getString (Constants.SP_PHONE, ""));
 
-        mLoadingView=new LoadingView (this);
+        mLoadingView = new LoadingView (this);
         //通过mCodeView找到自定义拖拽框
-        mCodeView= DialogManager.getInstance ().initView (this,R.layout.dialog_code_view);
-        mPictureV=mCodeView.findViewById (R.id.mPicture);
+        mCodeView = DialogManager.getInstance ().initView (this, R.layout.dialog_code_view);
+        mPictureV = mCodeView.findViewById (R.id.mPicture);
         mPictureV.setViewResultListener (new TouchPictureV.OnViewResultListener () {
             @Override
             public void onResult() {
@@ -110,17 +110,17 @@ public class LoginActivity extends BaseUIActivity implements View.OnClickListene
                 //sendSMS()
                 final IMUser user = new IMUser ();
                 //此处替换为你的用户名
-                user.setUsername("15219957055");
+                user.setUsername ("15219957055");
                 //此处替换为你的密码
-                user.setPassword("123456");
-                user.login(new SaveListener<IMUser> () {
+                user.setPassword ("123456");
+                user.login (new SaveListener<IMUser> () {
                     @Override
                     public void done(IMUser bmobUser, BmobException e) {
                         if (e == null) {
-                            Toast.makeText (LoginActivity.this, "登录成功：" + BmobManager.getInstance ().getUser ().getUsername (), Toast.LENGTH_LONG).show();
-                            startActivity (new Intent (LoginActivity.this,MainActivity.class));
+                            Toast.makeText (LoginActivity.this, "登录成功：" + BmobManager.getInstance ().getUser ().getUsername (), Toast.LENGTH_LONG).show ();
+                            startActivity (new Intent (LoginActivity.this, MainActivity.class));
                         } else {
-                            Toast.makeText(LoginActivity.this, "登录失败：" + e.getMessage(), Toast.LENGTH_LONG).show();
+                            Toast.makeText (LoginActivity.this, "登录失败：" + e.getMessage (), Toast.LENGTH_LONG).show ();
                         }
                     }
                 });
@@ -161,7 +161,7 @@ public class LoginActivity extends BaseUIActivity implements View.OnClickListene
         }
 
         //显示LoadingView
-        mLoadingView.show (getString(R.string.text_login_now_login_text));
+        mLoadingView.show (getString (R.string.text_login_now_login_text));
         //调用Bmob云函数登陆
         BmobManager.getInstance ().signOrLoginByMobilePhone (phone, code, new LogInListener<IMUser> () {
             @Override
