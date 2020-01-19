@@ -1,18 +1,20 @@
 package com.example.framework.helper;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.util.Log;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import androidx.core.content.FileProvider;
+import androidx.loader.content.CursorLoader;
 
 /**
  * FileName:FileHelper
@@ -77,12 +79,43 @@ public class FileHelper {
                     Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
         }
 
-        intent.putExtra (MediaStore.EXTRA_OUTPUT,imageUri);
-        mActivity.startActivityForResult (intent,CAMEAR_REQUEST_CODE);
+        intent.putExtra (MediaStore.EXTRA_OUTPUT, imageUri);
+        mActivity.startActivityForResult (intent, CAMEAR_REQUEST_CODE);
     }
 
-    public File getTempFile(){
+    public void toAlbum(Activity mActivity) {
+        Intent intent = new Intent (Intent.ACTION_PICK);
+        intent.setType ("image/*");
+        mActivity.startActivityForResult (intent,ALBUM_REQUEST_CODE);
+    }
+
+    public File getTempFile() {
         return tempFile;
     }
-    
+
+    /**
+     * 通过Uri去系统查询真实地址
+     * @param mContext
+     * @param uri
+     * @return
+     */
+    public String getRealPathFromURI(Context mContext,Uri uri){
+       String realPath="";
+       try{
+           String [] proj={MediaStore.Images.Media.DATA};
+           CursorLoader cursorLoader=new CursorLoader (mContext,uri,proj,null,null,null);
+           Cursor cursor=cursorLoader.loadInBackground ();
+           if(cursor!=null){
+               if(cursor.moveToNext ()){
+                   int index =cursor.getColumnIndex (MediaStore.Images.Media.DATA);
+                   cursor.moveToFirst ();
+                   realPath=cursor.getString (index);
+               }
+           }
+       }catch (Exception e){
+           e.printStackTrace ();
+       }
+       return realPath;
+    }
+
 }

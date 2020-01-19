@@ -5,7 +5,11 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
@@ -21,7 +25,6 @@ import com.example.meet.R;
 
 import java.io.File;
 
-import androidx.annotation.Nullable;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -65,10 +68,31 @@ public class FirstUploadActivity extends BaseBackActivity implements View.OnClic
     private void initView() {
         initPhotoView ();
 
-        iv_photo.setOnClickListener(this);
-        btn_upload.setOnClickListener(this);
+        iv_photo.setOnClickListener (this);
+        btn_upload.setOnClickListener (this);
 
-        btn_upload.setEnabled(false);
+        btn_upload.setEnabled (false);
+
+        et_nickname.addTextChangedListener (new TextWatcher () {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (s.length () > 0) {
+                    btn_upload.setEnabled (uploadFile != null);
+                } else {
+                    btn_upload.setEnabled (false);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
 
     }
 
@@ -76,60 +100,74 @@ public class FirstUploadActivity extends BaseBackActivity implements View.OnClic
      * 初始化选择框
      */
     private void initPhotoView() {
-        mLoadingView=new LoadingView (this);
-        mLoadingView.setLoadingText(getString(R.string.text_upload_photo_loding));
+        mLoadingView = new LoadingView (this);
+        mLoadingView.setLoadingText (getString (R.string.text_upload_photo_loding));
 
-        mPhotoSelectView= DialogManager.getInstance ().initView (this,R.layout.layout_select_photo, Gravity.BOTTOM);
-        tv_camera = (TextView) mPhotoSelectView.findViewById(R.id.tv_camera);
-        tv_camera.setOnClickListener(this);
-        tv_ablum = (TextView) mPhotoSelectView.findViewById(R.id.tv_album);
-        tv_ablum.setOnClickListener(this);
-        tv_cancel = (TextView) mPhotoSelectView.findViewById(R.id.tv_cancel);
-        tv_cancel.setOnClickListener(this);
+        mPhotoSelectView = DialogManager.getInstance ().initView (this, R.layout.layout_select_photo, Gravity.BOTTOM);
+        tv_camera = (TextView) mPhotoSelectView.findViewById (R.id.tv_camera);
+        tv_camera.setOnClickListener (this);
+        tv_ablum = (TextView) mPhotoSelectView.findViewById (R.id.tv_album);
+        tv_ablum.setOnClickListener (this);
+        tv_cancel = (TextView) mPhotoSelectView.findViewById (R.id.tv_cancel);
+        tv_cancel.setOnClickListener (this);
     }
 
     @Override
     public void onClick(View v) {
-       switch (v.getId ()){
-           case R.id.tv_camera:
-               DialogManager.getInstance ().hide (mPhotoSelectView);
-               if(!checkPermissions (Manifest.permission.CAMERA)){
-                   requestPermission (new String[]{Manifest.permission.CAMERA});
-               }
-               else{
-                   //跳转到相机
-                   FileHelper.getInstance ().toCamera (this);
-               }
-               break;
-           case R.id.tv_album:
-               DialogManager.getInstance ().hide (mPhotoSelectView);
-               //跳转到相册
-               
-               break;
-           case R.id.tv_cancel:
-               break;
-           case R.id.btn_upload:
-               break;
-           case R.id.iv_photo:
-               //显示选择提示框
-               DialogManager.getInstance().show(mPhotoSelectView);
-               break;
-       }
+        switch (v.getId ()) {
+            case R.id.tv_camera:
+                DialogManager.getInstance ().hide (mPhotoSelectView);
+                if (!checkPermissions (Manifest.permission.CAMERA)) {
+                    requestPermission (new String[]{Manifest.permission.CAMERA});
+                } else {
+                    //跳转到相机
+                    FileHelper.getInstance ().toCamera (this);
+                }
+                break;
+            case R.id.tv_album:
+                DialogManager.getInstance ().hide (mPhotoSelectView);
+                //跳转到相册
+                FileHelper.getInstance ().toAlbum (this);
+                break;
+            case R.id.tv_cancel:
+                DialogManager.getInstance ().hide (mPhotoSelectView);
+                break;
+            case R.id.btn_upload:
+                break;
+            case R.id.iv_photo:
+                //显示选择提示框
+                DialogManager.getInstance ().show (mPhotoSelectView);
+                break;
+        }
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode,  Intent data) {
-        if(resultCode==Activity.RESULT_OK){
-            switch (requestCode){
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == Activity.RESULT_OK) {
+            switch (requestCode) {
                 case FileHelper.CAMEAR_REQUEST_CODE:
-                    uploadFile=FileHelper.getInstance ().getTempFile ();
+                    uploadFile = FileHelper.getInstance ().getTempFile ();
+                    break;
+                case FileHelper.ALBUM_REQUEST_CODE:
+                    Uri uri = data.getData ();
+                    if (uri != null) {
+                        //String path=uri.getPath() 非系统绝对路径
+                        String path = FileHelper.getInstance ().getRealPathFromURI (FirstUploadActivity.this, uri);
+                        if (!TextUtils.isEmpty (path)) {
+                            uploadFile = new File (path);
+                        }
+                    }
+
                     break;
             }
         }
         //设置头像
-        if(uploadFile!=null){
-            Bitmap mBitmap= BitmapFactory.decodeFile (uploadFile.getPath ());
+        if (uploadFile != null) {
+            Bitmap mBitmap = BitmapFactory.decodeFile (uploadFile.getPath ());
             iv_photo.setImageBitmap (mBitmap);
+
+            String nickName = et_nickname.getText ().toString ().trim ();
+            btn_upload.setEnabled (!TextUtils.isEmpty (nickName));
         }
         super.onActivityResult (requestCode, resultCode, data);
     }
