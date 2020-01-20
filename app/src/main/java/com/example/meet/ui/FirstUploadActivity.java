@@ -15,8 +15,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.framework.base.BaseBackActivity;
+import com.example.framework.bmob.BmobManager;
 import com.example.framework.helper.FileHelper;
 import com.example.framework.manager.DialogManager;
 import com.example.framework.view.DialogView;
@@ -27,6 +29,7 @@ import java.io.File;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import cn.bmob.v3.exception.BmobException;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
@@ -133,12 +136,34 @@ public class FirstUploadActivity extends BaseBackActivity implements View.OnClic
                 DialogManager.getInstance ().hide (mPhotoSelectView);
                 break;
             case R.id.btn_upload:
+                uploadPhoto ();
                 break;
             case R.id.iv_photo:
                 //显示选择提示框
                 DialogManager.getInstance ().show (mPhotoSelectView);
                 break;
         }
+    }
+
+    /**
+     * 上传头像
+     */
+    private void uploadPhoto() {
+        String nickName = et_nickname.getText ().toString ().trim ();
+        mLoadingView.show ();
+        BmobManager.getInstance ().uploadFirstPhoto (nickName, uploadFile, new BmobManager.OnUploadPhotoListener () {
+            @Override
+            public void OnUpdateDone() {
+                mLoadingView.hide ();
+                finish ();
+            }
+
+            @Override
+            public void OnUpdateFail(BmobException e) {
+                mLoadingView.hide ();
+                Toast.makeText (FirstUploadActivity.this, e.toString (), Toast.LENGTH_SHORT).show ();
+            }
+        });
     }
 
     @Override
