@@ -14,9 +14,11 @@
         android:theme="@style/Theme.AppCompat.Light.NoActionBar"
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning">
+        <activity android:name=".ui.AddFriendActivity"
+            android:theme="@style/AppTheme"></activity>
         <activity
             android:name=".ui.FirstUploadActivity"
-            android:theme="@style/AppTheme"></activity>
+            android:theme="@style/AppTheme" />
 
         <service
             android:name=".service.CloudService"
@@ -44,9 +46,7 @@
             android:value="2.2" /> <!-- Bmob -->
         <provider
             android:name="cn.bmob.v3.util.BmobContentProvider"
-            android:authorities="com.example.meet.BmobContentProvider" />
-
-        <!--FileProvide-->
+            android:authorities="com.example.meet.BmobContentProvider" /> <!-- FileProvide -->
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.example.meet.fileprovider"

@@ -13,6 +13,7 @@ import android.widget.Toast;
 import com.example.framework.base.BaseFragment;
 import com.example.meet.R;
 import com.example.meet.adapter.CloudTagAdapter;
+import com.example.meet.ui.AddFriendActivity;
 import com.moxun.tagcloudlib.view.TagCloudView;
 
 import java.util.ArrayList;
@@ -27,33 +28,6 @@ import androidx.annotation.Nullable;
  * Profile: 星球
  */
 public class StarFragment extends BaseFragment implements View.OnClickListener {
-    /*    @BindView(R.id.tv_start_title)
-        TextView tv_start_title;
-        @BindView(R.id.iv_camera)
-        ImageView iv_camera;
-        @BindView(R.id.iv_add)
-        ImageView iv_add;
-        @BindView(R.id.tv_connect_status)
-        TextView tv_connect_status;
-        @BindView(R.id.mCloudView)
-        TagCloudView mCloudView;
-        @BindView(R.id.tv_random)
-        TextView tv_random;
-        @BindView(R.id.ll_random)
-        LinearLayout ll_random;
-        @BindView(R.id.tv_soul)
-        TextView tv_soul;
-        @BindView(R.id.ll_soul)
-        LinearLayout ll_soul;
-        @BindView(R.id.tv_fate)
-        TextView tv_fate;
-        @BindView(R.id.ll_fate)
-        LinearLayout ll_fate;
-        @BindView(R.id.tv_love)
-        TextView tv_love;
-        @BindView(R.id.ll_love)
-        LinearLayout ll_love;*/
-    //二维码结果
     private static final int REQUEST_CODE = 1235;
 
     private TextView tv_star_title;
@@ -126,6 +100,11 @@ public class StarFragment extends BaseFragment implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-        
+        switch (v.getId ()){
+            case R.id.iv_add:
+                //添加好友
+                startActivity (new Intent (getActivity (), AddFriendActivity.class));
+                break;
+        }
     }
 }
