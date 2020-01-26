@@ -132,6 +132,11 @@ public class BmobManager {
         baseQuery("mobilePhoneNumber", phone, listener);
     }
 
+    public void queryAllUser(FindListener<IMUser> listener){
+        BmobQuery<IMUser> query=new BmobQuery<> ();
+        query.findObjects (listener);
+    }
+
     /**
      * 查询基类
      * @param key

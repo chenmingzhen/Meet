@@ -5,10 +5,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.example.framework.helper.GlideHelper;
 import com.example.meet.R;
 import com.example.meet.model.AddFriendModel;
@@ -41,7 +40,7 @@ public class AddFriendAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     public void setOnClickListener(OnClickListener onClickListener) {
         this.onClickListener = onClickListener;
     }
-    
+
     public AddFriendAdapter(Context mContext, List<AddFriendModel> mList) {
         this.mContext = mContext;
         this.mList = mList;
@@ -65,19 +64,26 @@ public class AddFriendAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             ((TitleViewHolder) holder).tv_title.setText (model.getTitle ());
         } else if (model.getType () == TYPE_CONTENT) {
             //设置头像
-            GlideHelper.loadUrl (mContext,model.getPhoto (),((ContentViewHolder)holder).iv_photo);
+            GlideHelper.loadUrl (mContext, model.getPhoto (), ((ContentViewHolder) holder).iv_photo);
             //设置性别
-            ((ContentViewHolder)holder).iv_sex.setImageResource (model.isSex ()?R.drawable.img_boy_icon:R.drawable.img_girl_icon);
+            ((ContentViewHolder) holder).iv_sex.setImageResource (model.isSex () ? R.drawable.img_boy_icon : R.drawable.img_girl_icon);
             //设置昵称
-            ((ContentViewHolder)holder).tv_nickname.setText (model.getNickName ());
+            ((ContentViewHolder) holder).tv_nickname.setText (model.getNickName ());
             //设置年龄
-            ((ContentViewHolder)holder).tv_desc.setText (model.getDesc ());
+            ((ContentViewHolder) holder).tv_desc.setText (model.getDesc ());
+
+            //通讯录中读取
+            if (model.isContact ()) {
+                ((ContentViewHolder) holder).ll_contact_info.setVisibility (View.VISIBLE);
+                ((ContentViewHolder) holder).tv_contact_name.setText (model.getContactName ());
+                ((ContentViewHolder) holder).tv_contact_phone.setText (model.getContactPhone ());
+            }
         }
 
         holder.itemView.setOnClickListener (new View.OnClickListener () {
             @Override
             public void onClick(View v) {
-                if(onClickListener!=null){
+                if (onClickListener != null) {
                     onClickListener.OnClick (position);
                 }
             }
@@ -111,6 +117,9 @@ public class AddFriendAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         private TextView tv_nickname;
         private TextView tv_age;
         private TextView tv_desc;
+        private TextView tv_contact_name;
+        private TextView tv_contact_phone;
+        private LinearLayout ll_contact_info;
 
         public ContentViewHolder(View itemView) {
             super (itemView);
@@ -119,9 +128,13 @@ public class AddFriendAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             tv_nickname = itemView.findViewById (R.id.tv_nickname);
             tv_age = itemView.findViewById (R.id.tv_age);
             tv_desc = itemView.findViewById (R.id.tv_desc);
+            tv_contact_name = itemView.findViewById (R.id.tv_contact_name);
+            tv_contact_phone = itemView.findViewById (R.id.tv_contact_phone);
+            ll_contact_info=itemView.findViewById (R.id.ll_contact_info);
         }
     }
-    public interface OnClickListener{
+
+    public interface OnClickListener {
         void OnClick(int position);
     }
 }
