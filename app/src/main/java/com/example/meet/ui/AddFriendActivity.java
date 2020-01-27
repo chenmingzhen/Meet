@@ -10,6 +10,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.example.framework.adapter.CommonAdapter;
+import com.example.framework.adapter.CommonViewHolder;
 import com.example.framework.base.BaseBackActivity;
 import com.example.framework.bmob.BmobManager;
 import com.example.framework.bmob.IMUser;
@@ -47,7 +49,8 @@ public class AddFriendActivity extends BaseBackActivity implements View.OnClickL
     @BindView(R.id.mSearchResultView)
     RecyclerView mSearchResult;
 
-    private AddFriendAdapter mAddFriendAdapter;
+    //private AddFriendAdapter mAddFriendAdapter;
+    private CommonAdapter mAddFriendAdapter;
     private List<AddFriendModel> mList = new ArrayList<> ();
 
     @Override
@@ -67,15 +70,44 @@ public class AddFriendActivity extends BaseBackActivity implements View.OnClickL
 
         mSearchResult.setLayoutManager (new LinearLayoutManager (this));
         mSearchResult.addItemDecoration (new DividerItemDecoration (this, DividerItemDecoration.VERTICAL));
-        mAddFriendAdapter = new AddFriendAdapter (this, mList);
-        mSearchResult.setAdapter (mAddFriendAdapter);
-
-        mAddFriendAdapter.setOnClickListener (new AddFriendAdapter.OnClickListener () {
+        //mAddFriendAdapter = new AddFriendAdapter (this, mList);
+        mAddFriendAdapter = new CommonAdapter<> (mList, new CommonAdapter.OnMoreBindDataListener<AddFriendModel> () {
             @Override
-            public void OnClick(int position) {
-                Toast.makeText (AddFriendActivity.this, "position:" + position, Toast.LENGTH_SHORT).show ();
+            public int getItemType(int position) {
+                return mList.get (position).getType ();
+            }
+
+            @Override
+            public void onBindViewHolder(AddFriendModel model, CommonViewHolder viewHolder, int type, int position) {
+                if (type == TYPE_TITLE) {
+                    viewHolder.setText (R.id.tv_title, model.getTitle ());
+                } else if (type == TYPE_CONTENT) {
+                    //设置头像
+                    viewHolder.setImageUrl (AddFriendActivity.this, R.id.iv_photo, model.getPhoto ());
+                    //设置性别
+                    viewHolder.setImageResource (R.id.iv_sex,
+                            model.isSex () ? R.drawable.img_boy_icon : R.drawable.img_girl_icon);
+                    //设置昵称
+                    viewHolder.setText (R.id.tv_nickname, model.getNickName ());
+                    //年龄
+                    viewHolder.setText (R.id.tv_age, model.getAge () + getString (R.string.text_search_age));
+                    //设置描述
+                    viewHolder.setText (R.id.tv_desc, model.getDesc ());
+                }
+            }
+
+            @Override
+            public int getLayoutId(int type) {
+                if (type == TYPE_TITLE) {
+                    return R.layout.layout_search_title_item;
+                } else if (type == TYPE_CONTENT) {
+                    return R.layout.layout_search_user_item;
+                }
+                return 0;
             }
         });
+        mSearchResult.setAdapter (mAddFriendAdapter);
+
     }
 
     @Override
@@ -85,9 +117,9 @@ public class AddFriendActivity extends BaseBackActivity implements View.OnClickL
             case R.id.ll_to_contact:
                 //处理权限
                 if (checkPermissions (Manifest.permission.READ_CONTACTS)) {
-                    startActivity (new Intent(this,ContactFriendActivity.class));
+                    startActivity (new Intent (this, ContactFriendActivity.class));
                 } else {
-                   requestPermission (new String[]{Manifest.permission.READ_CONTACTS});
+                    requestPermission (new String[]{Manifest.permission.READ_CONTACTS});
                 }
                 break;
             case R.id.iv_search:
