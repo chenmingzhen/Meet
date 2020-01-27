@@ -9,12 +9,14 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.framework.base.BaseUIActivity;
 import com.example.framework.bmob.BmobManager;
 import com.example.framework.entity.Constants;
-import com.example.framework.java.SimulationData;
+import com.example.framework.gson.TokenBean;
 import com.example.framework.manager.DialogManager;
+import com.example.framework.manager.HttpManager;
 import com.example.framework.utils.LogUtils;
 import com.example.framework.utils.SpUtils;
 import com.example.framework.view.DialogView;
@@ -24,7 +26,9 @@ import com.example.meet.fragment.SquareFragment;
 import com.example.meet.fragment.StarFragment;
 import com.example.meet.service.CloudService;
 import com.example.meet.ui.FirstUploadActivity;
+import com.google.gson.Gson;
 
+import java.util.HashMap;
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -33,6 +37,13 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 
 public class MainActivity extends BaseUIActivity implements View.OnClickListener {
@@ -79,6 +90,8 @@ public class MainActivity extends BaseUIActivity implements View.OnClickListener
 
     private DialogView mUploadView;
 
+    private Disposable disposable;
+
     /**
      * 1.初始化Frahment
      * 2.显示Fragment
@@ -87,7 +100,6 @@ public class MainActivity extends BaseUIActivity implements View.OnClickListener
      * 优化的手段
      */
 
-    
 
     @RequiresApi(api = Build.VERSION_CODES.N)
     @Override
@@ -132,7 +144,7 @@ public class MainActivity extends BaseUIActivity implements View.OnClickListener
         String token = SpUtils.getInstance ().getString (Constants.SP_TOKEN, "");
         if (!TextUtils.isEmpty (token)) {
             //启动云服务去连接融云服务
-            startService (new Intent (this, CloudService.class));
+           startCloudService ();
         } else {
             //1.有三个参数
             String tokenPhoto = BmobManager.getInstance ().getUser ().getTokenPhoto ();
@@ -151,22 +163,73 @@ public class MainActivity extends BaseUIActivity implements View.OnClickListener
      * 上传提示框
      */
     private void createUploadDialog() {
-      mUploadView= DialogManager.getInstance ().initView (this,R.layout.layout_first_upload);
-      mUploadView.setCancelable (false);
-      ImageView iv_go_upload=mUploadView.findViewById (R.id.iv_go_upload);
-      iv_go_upload.setOnClickListener (new View.OnClickListener () {
-          @Override
-          public void onClick(View v) {
-              FirstUploadActivity.startActivity (MainActivity.this);
-          }
-      });
-      DialogManager.getInstance ().show (mUploadView);
+        mUploadView = DialogManager.getInstance ().initView (this, R.layout.layout_first_upload);
+        mUploadView.setCancelable (false);
+        ImageView iv_go_upload = mUploadView.findViewById (R.id.iv_go_upload);
+        iv_go_upload.setOnClickListener (new View.OnClickListener () {
+            @Override
+            public void onClick(View v) {
+                FirstUploadActivity.startActivity (MainActivity.this);
+            }
+        });
+        DialogManager.getInstance ().show (mUploadView);
     }
 
     /**
      * 创建Token
      */
     private void createToken() {
+        LogUtils.i ("createToken");
+        /**
+         * 1.去融云后台获取Token
+         * 2.连接融云
+         */
+        final HashMap<String, String> map = new HashMap<> ();
+        map.put ("userId", BmobManager.getInstance ().getUser ().getObjectId ());
+        map.put ("name", BmobManager.getInstance ().getUser ().getTokenNickName ());
+        map.put ("portraitUri", BmobManager.getInstance ().getUser ().getTokenPhoto ());
+
+        disposable = Observable.create (new ObservableOnSubscribe<String> () {
+            @Override
+            public void subscribe(ObservableEmitter<String> emitter) throws Exception {
+                //执行请求
+                String json = HttpManager.getInstance ().postCloudToken (map);
+                LogUtils.i ("json:" + json);
+                emitter.onNext (json);
+                emitter.onComplete ();
+            }
+            //线程调度
+        }).subscribeOn (Schedulers.newThread ()).subscribeOn (AndroidSchedulers.mainThread ())
+                .subscribe (new Consumer<String> () {
+                    @Override
+                    public void accept(String s) throws Exception {
+                        parsingCloudToken (s);
+                    }
+                });
+
+    }
+
+
+    /**
+     * 启动云服务去连接融云服务
+     */
+    private void startCloudService() {
+        LogUtils.i("startCloudService");
+        startService(new Intent(this, CloudService.class));
+        //检查更新
+    }
+
+    private void parsingCloudToken(String s) {
+        TokenBean tokenBean = new Gson ().fromJson (s, TokenBean.class);
+        if (tokenBean.getCode () == 200) {
+            if (!TextUtils.isEmpty (tokenBean.getToken ())) {
+                //保存Token
+                SpUtils.getInstance ().putString (Constants.SP_TOKEN, tokenBean.getToken ());
+                startCloudService ();
+            }
+        } else if (tokenBean.getCode () == 2007) {
+            Toast.makeText (this, "注册人数已达上限，请替换成自己的Key", Toast.LENGTH_SHORT).show ();
+        }
     }
 
     /**
