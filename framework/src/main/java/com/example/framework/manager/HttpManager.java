@@ -1,11 +1,14 @@
 package com.example.framework.manager;
 
+import android.content.Context;
+
 import com.example.framework.cloud.CloudManager;
 import com.example.framework.utils.SHA1;
 
 import java.io.IOException;
 import java.util.HashMap;
 
+import io.rong.imlib.RongIMClient;
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -67,4 +70,6 @@ public class HttpManager {
         }
         return "";
     }
+
+
 }
