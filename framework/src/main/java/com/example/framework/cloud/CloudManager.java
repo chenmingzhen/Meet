@@ -4,7 +4,11 @@ import android.content.Context;
 
 import com.example.framework.utils.LogUtils;
 
+import io.rong.imlib.IRongCallback;
 import io.rong.imlib.RongIMClient;
+import io.rong.imlib.model.Conversation;
+import io.rong.imlib.model.Message;
+import io.rong.message.TextMessage;
 
 /**
  * FileName:CloudManager
@@ -86,6 +90,50 @@ public class CloudManager {
      */
     public void setOnReceiveMessageListener(RongIMClient.OnReceiveMessageListener listener) {
         RongIMClient.setOnReceiveMessageListener(listener);
+    }
+
+
+    /**
+     * 发送消息的结果回调
+     */
+    private IRongCallback.ISendMessageCallback iSendMessageCallback=new IRongCallback.ISendMessageCallback () {
+        @Override
+        public void onAttached(Message message) {
+            // 消息成功存到本地数据库的回调
+        }
+
+        @Override
+        public void onSuccess(Message message) {
+            // 消息发送成功的回调
+            LogUtils.i("sendMessage onSuccess");
+        }
+
+        @Override
+        public void onError(Message message, RongIMClient.ErrorCode errorCode) {
+            // 消息发送失败的回调
+            LogUtils.e("sendMessage onError:" + errorCode);
+        }
+    };
+
+    /**
+     * 发送文本消息
+     * 一个手机 发送
+     * 另外一个手机 接收
+     *
+     * @param msg
+     * @param targetId
+     */
+    private void sendTextMessage(String msg,String targetId){
+        LogUtils.i ("sendTextMessage");
+        TextMessage textMessage=TextMessage.obtain (msg);
+        RongIMClient.getInstance().sendMessage(
+                Conversation.ConversationType.PRIVATE,
+                targetId,
+                textMessage,
+                null,
+                null,
+                iSendMessageCallback
+        );
     }
 
 }

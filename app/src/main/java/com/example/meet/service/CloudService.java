@@ -9,8 +9,11 @@ import com.example.framework.entity.Constants;
 import com.example.framework.utils.LogUtils;
 import com.example.framework.utils.SpUtils;
 
+import io.rong.imlib.IRongCallback;
 import io.rong.imlib.RongIMClient;
+import io.rong.imlib.model.Conversation;
 import io.rong.imlib.model.Message;
+import io.rong.message.TextMessage;
 import okhttp3.internal.Util;
 
 public class CloudService extends Service {
@@ -43,4 +46,5 @@ public class CloudService extends Service {
             }
         });
     }
+
 }
