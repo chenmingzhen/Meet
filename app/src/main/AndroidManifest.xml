@@ -14,8 +14,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar"
         tools:ignore="GoogleAppIndexingWarning">
-
-        <!--离线消息-->
+        <activity android:name=".ui.UserInfoActivity"></activity>
+        <!-- 离线消息 -->
         <receiver
             android:name=".receiver.SealNotificationReceiver"
             android:exported="true">

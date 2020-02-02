@@ -93,6 +93,12 @@ public class AddFriendActivity extends BaseBackActivity implements View.OnClickL
                     viewHolder.setText (R.id.tv_age, model.getAge () + getString (R.string.text_search_age));
                     //设置描述
                     viewHolder.setText (R.id.tv_desc, model.getDesc ());
+                    viewHolder.itemView.setOnClickListener (new View.OnClickListener () {
+                        @Override
+                        public void onClick(View v) {
+                            UserInfoActivity.startActivity (AddFriendActivity.this,model.getUserId ());
+                        }
+                    });
                 }
             }
 

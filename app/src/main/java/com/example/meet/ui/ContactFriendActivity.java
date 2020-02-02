@@ -3,7 +3,10 @@ package com.example.meet.ui;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.view.View;
 
+import com.example.framework.adapter.CommonAdapter;
+import com.example.framework.adapter.CommonViewHolder;
 import com.example.framework.base.BaseBackActivity;
 import com.example.framework.bmob.BmobManager;
 import com.example.framework.bmob.IMUser;
@@ -33,7 +36,8 @@ public class ContactFriendActivity extends BaseBackActivity {
 
     private Map<String, String> mContactMap = new HashMap<> ();
 
-    private AddFriendAdapter mContactAdapter;
+    //private AddFriendAdapter mContactAdapter;
+    private CommonAdapter<AddFriendModel> mContactAdapter;
     private List<AddFriendModel> mList = new ArrayList<> ();
 
     @Override
@@ -47,7 +51,41 @@ public class ContactFriendActivity extends BaseBackActivity {
     private void initView() {
         mContactView.setLayoutManager (new LinearLayoutManager (this));
         mContactView.addItemDecoration (new DividerItemDecoration (this, DividerItemDecoration.VERTICAL));
-        mContactAdapter=new AddFriendAdapter (this,mList);
+        //mContactAdapter=new AddFriendAdapter (this,mList);
+        mContactAdapter=new CommonAdapter<AddFriendModel> (mList, new CommonAdapter.OnBindDataListener<AddFriendModel> () {
+            @Override
+            public void onBindViewHolder(AddFriendModel model, CommonViewHolder viewHolder, int type, int position) {
+                //设置头像
+                viewHolder.setImageUrl(ContactFriendActivity.this, R.id.iv_photo, model.getPhoto());
+                //设置性别
+                viewHolder.setImageResource(R.id.iv_sex,
+                        model.isSex() ? R.drawable.img_boy_icon : R.drawable.img_girl_icon);
+                //设置昵称
+                viewHolder.setText(R.id.tv_nickname, model.getNickName());
+                //年龄
+                viewHolder.setText(R.id.tv_age, model.getAge() + getString(R.string.text_search_age));
+                //设置描述
+                viewHolder.setText(R.id.tv_desc, model.getDesc());
+
+                if (model.isContact()) {
+                    viewHolder.getView(R.id.ll_contact_info).setVisibility(View.VISIBLE);
+                    viewHolder.setText(R.id.tv_contact_name, model.getContactName());
+                    viewHolder.setText(R.id.tv_contact_phone, model.getContactPhone());
+                }
+
+                viewHolder.itemView.setOnClickListener (new View.OnClickListener () {
+                    @Override
+                    public void onClick(View v) {
+                        UserInfoActivity.startActivity (ContactFriendActivity.this,model.getUserId ());
+                    }
+                });
+            }
+
+            @Override
+            public int getLayoutId(int type) {
+                return R.layout.layout_search_user_item;
+            }
+        });
         mContactView.setAdapter (mContactAdapter);
 
         loadContact ();

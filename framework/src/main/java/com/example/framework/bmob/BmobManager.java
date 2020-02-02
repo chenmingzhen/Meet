@@ -128,24 +128,30 @@ public class BmobManager {
         void OnUpdateFail(BmobException e);
     }
 
-    public void queryPhoneUser(String phone, FindListener<IMUser> listener){
-        baseQuery("mobilePhoneNumber", phone, listener);
+    public void queryPhoneUser(String phone, FindListener<IMUser> listener) {
+        baseQuery ("mobilePhoneNumber", phone, listener);
     }
 
-    public void queryAllUser(FindListener<IMUser> listener){
-        BmobQuery<IMUser> query=new BmobQuery<> ();
+    public void queryObjectIdUser(String objectId, FindListener<IMUser> listener) {
+        baseQuery ("objectId", objectId, listener);
+    }
+
+    public void queryAllUser(FindListener<IMUser> listener) {
+        BmobQuery<IMUser> query = new BmobQuery<> ();
         query.findObjects (listener);
     }
 
+
     /**
      * 查询基类
+     *
      * @param key
      * @param values
      * @param listener
      */
-    public void baseQuery(String key,String values,FindListener<IMUser> listener){
-        BmobQuery<IMUser> query=new BmobQuery<> ();
-        query.addWhereEqualTo (key,values);
+    public void baseQuery(String key, String values, FindListener<IMUser> listener) {
+        BmobQuery<IMUser> query = new BmobQuery<> ();
+        query.addWhereEqualTo (key, values);
         query.findObjects (listener);
     }
 }
