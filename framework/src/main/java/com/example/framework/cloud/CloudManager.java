@@ -4,6 +4,8 @@ import android.content.Context;
 
 import com.example.framework.utils.LogUtils;
 
+import org.json.JSONObject;
+
 import io.rong.imlib.IRongCallback;
 import io.rong.imlib.RongIMClient;
 import io.rong.imlib.model.Conversation;
@@ -21,6 +23,18 @@ public class CloudManager {
     //Key
     public static final String CLOUD_KEY = "k51hidwqkvc5b";
     public static final String CLOUD_SECRET = "OHqaSFEZdDy";
+
+    //ObjectName
+    public static final String MSG_TEXT_NAME = "RC:TxtMsg";
+    public static final String MSG_IMAGE_NAME = "RC:ImgMsg";
+    public static final String MSG_LOCATION_NAME = "RC:LBSMsg";
+
+    //普通消息
+    public static final String TYPE_TEXT = "TYPE_TEXT";
+    //添加好友消息
+    public static final String TYPE_ADD_FRIEND = "TYPE_ADD_FRIEND";
+    //同意添加好友的消息
+    public static final String TYPE_ARGEED_FRIEND = "TYPE_AGREED_FRIEND";
 
     private static volatile CloudManager mInstance=null;
     private CloudManager(){
@@ -123,7 +137,7 @@ public class CloudManager {
      * @param msg
      * @param targetId
      */
-    private void sendTextMessage(String msg,String targetId){
+    public void sendTextMessage(String msg, String targetId){
         LogUtils.i ("sendTextMessage");
         TextMessage textMessage=TextMessage.obtain (msg);
         RongIMClient.getInstance().sendMessage(
@@ -134,6 +148,18 @@ public class CloudManager {
                 null,
                 iSendMessageCallback
         );
+    }
+
+    public void sendTextMessage(String msg,String type,String targetId){
+        JSONObject jsonObject=new JSONObject ();
+        try{
+           jsonObject.put ("msg",msg);
+            //如果没有这个Type 就是一条普通消息
+           jsonObject.put ("type",type);
+           sendTextMessage (jsonObject.toString (),targetId);
+        }catch (Exception e){
+            e.printStackTrace ();
+        }
     }
 
 }

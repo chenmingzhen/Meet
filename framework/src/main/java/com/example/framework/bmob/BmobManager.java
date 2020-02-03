@@ -141,6 +141,11 @@ public class BmobManager {
         query.findObjects (listener);
     }
 
+    public void queryMyFriends(FindListener<Friend> listener){
+        BmobQuery<Friend> query=new BmobQuery<> ();
+        query.addWhereEqualTo ("user",getUser ());
+        query.findObjects (listener);
+    }
 
     /**
      * 查询基类
