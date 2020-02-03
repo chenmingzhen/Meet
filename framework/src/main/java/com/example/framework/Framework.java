@@ -6,6 +6,8 @@ import com.example.framework.bmob.BmobManager;
 import com.example.framework.cloud.CloudManager;
 import com.example.framework.utils.SpUtils;
 
+import org.litepal.LitePal;
+
 public class Framework {
     private volatile static Framework mFramework;
 
@@ -28,5 +30,6 @@ public class Framework {
         SpUtils.getInstance ().initSp (context);
         BmobManager.getInstance ().initBmob (context);
         CloudManager.getInstance ().initCloud (context);
+        LitePal.initialize (context);
     }
 }

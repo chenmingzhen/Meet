@@ -6,6 +6,7 @@ import android.os.IBinder;
 import android.view.View;
 
 import com.example.framework.cloud.CloudManager;
+import com.example.framework.db.LitePalHelper;
 import com.example.framework.entity.Constants;
 import com.example.framework.gson.TextBean;
 import com.example.framework.utils.LogUtils;
@@ -58,8 +59,13 @@ public class CloudService extends Service implements View.OnClickListener {
 
             if (textBean.getType ().equals (CloudManager.TYPE_TEXT)) {
 
+                //添加好友消息
             } else if (textBean.getType ().equals (CloudManager.TYPE_ADD_FRIEND)) {
+                //存入数据库 Bmob RongCloud 都没有提供存储方法
+                //使用另外的方法来实现 存入本地数据库
                 LogUtils.i ("添加好友消息");
+                LitePalHelper.getInstance ().saveNewFriend (textBean.getMsg (),message.getTargetId ());
+                
             } else if (textBean.getType ().equals (CloudManager.TYPE_ARGEED_FRIEND)) {
 
             }
