@@ -75,4 +75,24 @@ public class LitePalHelper {
        newFriend.setIsAgree (agree);
        newFriend.updateAll ("userId=?",userId);
     }
+
+    /**
+     * 删除已同意或拒绝的好友列表
+     * @param userId
+     */
+    public void deleteNewFriend(String userId){
+        NewFriend newFriend=new NewFriend ();
+        LitePal.deleteAll (NewFriend.class,"userId=?",userId);
+    }
+
+    /**
+     * 更新消息的内容
+     * @param userId
+     * @param msg
+     */
+    public void updateNewFriend(String userId,String msg){
+        NewFriend newFriend=new NewFriend ();
+        newFriend.setMsg (msg);
+        newFriend.updateAll ("userId=?",userId);
+    }
 }

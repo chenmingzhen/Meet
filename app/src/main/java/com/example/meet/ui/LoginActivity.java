@@ -110,7 +110,7 @@ public class LoginActivity extends BaseUIActivity implements View.OnClickListene
                 //sendSMS()
                 final IMUser user = new IMUser ();
                 //此处替换为你的用户名
-                user.setUsername ("15362944513");
+                user.setUsername ("15219957055");
                 //此处替换为你的密码
                 user.setPassword ("123456");
                 user.login (new SaveListener<IMUser> () {

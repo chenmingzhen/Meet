@@ -13,6 +13,7 @@ import com.example.framework.bmob.BmobManager;
 import com.example.framework.bmob.IMUser;
 import com.example.framework.helper.GlideHelper;
 import com.example.meet.R;
+import com.example.meet.ui.NewFriendActivity;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -81,7 +82,7 @@ public class MeFragment extends BaseFragment implements View.OnClickListener {
                 break;
             case R.id.ll_new_friend:
                 //新朋友
-                //startActivity (new Intent (getActivity (), NewFriendActivity.class));
+                startActivity (new Intent (getActivity (), NewFriendActivity.class));
                 break;
             case R.id.ll_private_set:
                 //隐私设置
