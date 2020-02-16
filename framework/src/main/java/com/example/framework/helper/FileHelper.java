@@ -76,7 +76,7 @@ public class FileHelper {
             imageUri = FileProvider.getUriForFile (mActivity, mActivity.getPackageName () + ".fileprovider", tempFile);
             //添加权限
             intent.addFlags (Intent.FLAG_GRANT_READ_URI_PERMISSION |
-                    Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                    Intent.FLAG_GRANT_WRITE_URI_PERMISSION);  //添加这一句表示对目标应用临时授权该Uri所代表的文件
         }
 
         intent.putExtra (MediaStore.EXTRA_OUTPUT, imageUri);
