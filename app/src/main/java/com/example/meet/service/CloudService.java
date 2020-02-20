@@ -11,6 +11,7 @@ import com.example.framework.db.LitePalHelper;
 import com.example.framework.db.NewFriend;
 import com.example.framework.entity.Constants;
 import com.example.framework.event.EventManager;
+import com.example.framework.event.MessageEvent;
 import com.example.framework.gson.TextBean;
 import com.example.framework.utils.CommonUtils;
 import com.example.framework.utils.LogUtils;
@@ -71,9 +72,14 @@ public class CloudService extends Service implements View.OnClickListener {
             String content = textMessage.getContent ();
             LogUtils.i ("content:" + content);
             TextBean textBean = new Gson ().fromJson (content, TextBean.class);
-
+            //普通消息
             if (textBean.getType ().equals (CloudManager.TYPE_TEXT)) {
+                MessageEvent event=new MessageEvent ((EventManager.FLAG_SEND_TEXT));
+                event.setText (textBean.getMsg ());
+                event.setUserId (message.getSenderUserId ());
+                EventManager.post (event);
 
+                return;
                 //添加好友消息
             } else if (textBean.getType ().equals (CloudManager.TYPE_ADD_FRIEND)) {
                 //存入数据库 Bmob RongCloud 都没有提供存储方法

@@ -239,7 +239,7 @@ public class UserInfoActivity extends BaseUIActivity implements View.OnClickList
                 finish ();
                 break;
             case R.id.btn_add_friend:
-                DialogManager.getInstance().show(mAddFriendDialogView);
+                DialogManager.getInstance().show(mAddFriendDialogView);                                                               
                 break;
             case R.id.tv_cancel:
                 DialogManager.getInstance().hide(mAddFriendDialogView);
@@ -253,6 +253,9 @@ public class UserInfoActivity extends BaseUIActivity implements View.OnClickList
                 CloudManager.getInstance ().sendTextMessage (msg,CloudManager.TYPE_ADD_FRIEND,userId);
                 DialogManager.getInstance ().hide (mAddFriendDialogView);
                 Toast.makeText(this, getString(R.string.text_user_resuest_succeed), Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.btn_chat:
+                ChatActivity.startActivity (UserInfoActivity.this,userId,imUser.getNickName (),imUser.getPhoto ());
                 break;
         }
     }

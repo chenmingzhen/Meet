@@ -1,31 +1,28 @@
-package com.example.framework.event;
+package com.example.meet.model;
+
+import java.io.File;
 
 /**
- * FileName:MessageEvent
- * Create Date:2020/2/4 21:07
+ * FileName:ChatModel
+ * Create Date:2020/2/19 23:30
  * Profile:
  */
-public class MessageEvent {
+public class ChatModel {
+
     private int type;
 
-    //文本消息
-    private String userId;  //每个消息都应该持有userId
+    //文本
     private String text;
 
-    //图片消息
+    //图片
     private String imgUrl;
 
-    //位置消息
-    private double la;
-    private double lo;
-    private String address;
-
-    public String getUserId() {
-        return userId;
+    public int getType() {
+        return type;
     }
 
-    public void setUserId(String userId) {
-        this.userId = userId;
+    public void setType(int type) {
+        this.type = type;
     }
 
     public String getText() {
@@ -42,6 +39,14 @@ public class MessageEvent {
 
     public void setImgUrl(String imgUrl) {
         this.imgUrl = imgUrl;
+    }
+
+    public File getLocalFile() {
+        return localFile;
+    }
+
+    public void setLocalFile(File localFile) {
+        this.localFile = localFile;
     }
 
     public double getLa() {
@@ -68,18 +73,20 @@ public class MessageEvent {
         this.address = address;
     }
 
-
-
-    public int getType() {
-        return type;
+    public String getMapUrl() {
+        return mapUrl;
     }
 
-    public void setType(int type) {
-        this.type = type;
+    public void setMapUrl(String mapUrl) {
+        this.mapUrl = mapUrl;
     }
 
-    public MessageEvent(int type) {
-        this.type = type;
-    }
+    private File localFile;
 
+    //位置
+    private double la;
+    private double lo;
+    private String address;
+    private String mapUrl;
+    
 }

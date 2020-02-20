@@ -16,6 +16,7 @@ import com.example.framework.utils.CommonUtils;
 import com.example.framework.utils.LogUtils;
 import com.example.meet.R;
 import com.example.meet.model.ChatRecordModel;
+import com.example.meet.ui.ChatActivity;
 import com.google.gson.Gson;
 
 import java.text.SimpleDateFormat;
@@ -76,6 +77,14 @@ public class ChatRecordFragment extends BaseFragment implements SwipeRefreshLayo
                     viewHolder.getView (R.id.tv_un_read).setVisibility (View.VISIBLE);
                     viewHolder.setText (R.id.tv_un_read, model.getUnReadSize () + "");
                 }
+
+                viewHolder.itemView.setOnClickListener (new View.OnClickListener () {
+                    @Override
+                    public void onClick(View v) {
+                        ChatActivity.startActivity (getActivity (),
+                                model.getUserId (), model.getNickName (), model.getUrl ());
+                    }
+                });
             }
 
             @Override
@@ -170,8 +179,8 @@ public class ChatRecordFragment extends BaseFragment implements SwipeRefreshLayo
 
     @Override
     public void onRefresh() {
-      if(mChatRecordRefreshLayout.isRefreshing ()){
-          queryChatRecord ();
-      }
+        if (mChatRecordRefreshLayout.isRefreshing ()) {
+            queryChatRecord ();
+        }
     }
 }

@@ -15,6 +15,7 @@ import com.example.framework.utils.CommonUtils;
 import com.example.framework.utils.LogUtils;
 import com.example.meet.R;
 import com.example.meet.model.AllFriendModel;
+import com.example.meet.ui.UserInfoActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,6 +66,12 @@ public class AllFriendFragment extends BaseFragment implements SwipeRefreshLayou
                 viewHolder.setImageResource(R.id.iv_sex, model.isSex()
                         ? R.drawable.img_boy_icon : R.drawable.img_girl_icon);
                 viewHolder.setText(R.id.tv_desc, model.getDesc());
+                viewHolder.itemView.setOnClickListener (new View.OnClickListener () {
+                    @Override
+                    public void onClick(View v) {
+                        UserInfoActivity.startActivity (getActivity (),model.getUserId ());
+                    }
+                });
             }
 
             @Override
