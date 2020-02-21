@@ -3,6 +3,7 @@ package com.example.meet.service;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
+import android.text.TextUtils;
 import android.view.View;
 
 import com.example.framework.bmob.BmobManager;
@@ -31,6 +32,7 @@ import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 import io.rong.imlib.RongIMClient;
 import io.rong.imlib.model.Message;
+import io.rong.message.ImageMessage;
 import io.rong.message.TextMessage;
 
 public class CloudService extends Service implements View.OnClickListener {
@@ -74,7 +76,7 @@ public class CloudService extends Service implements View.OnClickListener {
             TextBean textBean = new Gson ().fromJson (content, TextBean.class);
             //普通消息
             if (textBean.getType ().equals (CloudManager.TYPE_TEXT)) {
-                MessageEvent event=new MessageEvent ((EventManager.FLAG_SEND_TEXT));
+                MessageEvent event = new MessageEvent ((EventManager.FLAG_SEND_TEXT));
                 event.setText (textBean.getMsg ());
                 event.setUserId (message.getSenderUserId ());
                 EventManager.post (event);
@@ -85,7 +87,7 @@ public class CloudService extends Service implements View.OnClickListener {
                 //存入数据库 Bmob RongCloud 都没有提供存储方法
                 //使用另外的方法来实现 存入本地数据库
                 LogUtils.i ("添加好友消息");
-                Disposable disposable=Observable.create (new ObservableOnSubscribe<List<NewFriend>> () {
+                Disposable disposable = Observable.create (new ObservableOnSubscribe<List<NewFriend>> () {
 
                     @Override
                     public void subscribe(ObservableEmitter<List<NewFriend>> emitter) throws Exception {
@@ -107,7 +109,7 @@ public class CloudService extends Service implements View.OnClickListener {
                                         }
                                     }
                                     //自己添加的 更新新的消息 替代旧的消息内容
-                                    LitePalHelper.getInstance ().updateNewFriend (message.getTargetId (),textBean.getMsg ());
+                                    LitePalHelper.getInstance ().updateNewFriend (message.getTargetId (), textBean.getMsg ());
                                     //避免重复添加
                                     if (!isHave) {
                                         LitePalHelper.getInstance ().saveNewFriend (textBean.getMsg (), message.getTargetId ());
@@ -118,9 +120,9 @@ public class CloudService extends Service implements View.OnClickListener {
                             }
                         });
 
-               //同意添加好友信息
+                //同意添加好友信息
             } else if (textBean.getType ().equals (CloudManager.TYPE_ARGEED_FRIEND)) {
-               //1.添加好友到列表
+                //1.添加好友到列表
                 BmobManager.getInstance ().addFriend (message.getSenderUserId (), new SaveListener<String> () {
                     @Override
                     public void done(String s, BmobException e) {
@@ -128,6 +130,21 @@ public class CloudService extends Service implements View.OnClickListener {
                         EventManager.post (EventManager.FLAG_UPDATE_FRIEND_LIST);
                     }
                 });
+            }
+        } else if (objectName.equals (CloudManager.MSG_IMAGE_NAME)) {
+            try {
+                ImageMessage imageMessage = (ImageMessage) message.getContent ();
+                String url = imageMessage.getRemoteUri ().toString ();
+                if(!TextUtils.isEmpty (url)){
+                    LogUtils.i("url:" + url);
+                    MessageEvent messageEvent=new MessageEvent (EventManager.FLAG_SEND_IMAGE);
+                    messageEvent.setImgUrl (url);
+                    messageEvent.setUserId(message.getSenderUserId());
+                    EventManager.post(messageEvent);
+                }
+            } catch (Exception e) {
+                LogUtils.e ("e." + e.toString ());
+                e.printStackTrace ();
             }
         }
 

@@ -183,4 +183,15 @@ public class ChatRecordFragment extends BaseFragment implements SwipeRefreshLayo
             queryChatRecord ();
         }
     }
+
+    /**
+     * 不用每次有消息来手动刷新
+     */
+    @Override
+    public void onResume() {
+        super.onResume ();
+        if (mChatRecordRefreshLayout.isRefreshing ()) {
+            queryChatRecord ();
+        }
+    }
 }

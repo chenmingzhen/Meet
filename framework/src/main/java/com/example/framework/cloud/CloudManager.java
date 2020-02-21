@@ -1,17 +1,20 @@
 package com.example.framework.cloud;
 
 import android.content.Context;
+import android.net.Uri;
 
 import com.example.framework.utils.LogUtils;
 
 import org.json.JSONObject;
 
+import java.io.File;
 import java.util.List;
 
 import io.rong.imlib.IRongCallback;
 import io.rong.imlib.RongIMClient;
 import io.rong.imlib.model.Conversation;
 import io.rong.imlib.model.Message;
+import io.rong.message.ImageMessage;
 import io.rong.message.TextMessage;
 
 /**
@@ -196,6 +199,48 @@ public class CloudManager {
     public void getRemoteHistoryMessages(String targetId, RongIMClient.ResultCallback<List<Message>> callback) {
         RongIMClient.getInstance ().getRemoteHistoryMessages (Conversation.ConversationType.PRIVATE
                 , targetId, 0, 20, callback);
+    }
+
+
+    private RongIMClient.SendImageMessageCallback sendImageMessageCallback = new RongIMClient.SendImageMessageCallback() {
+        @Override
+        public void onAttached(Message message) {
+            LogUtils.i("onAttached");
+        }
+
+        @Override
+        public void onError(Message message, RongIMClient.ErrorCode errorCode) {
+            LogUtils.i("onError:" + errorCode);
+        }
+
+        @Override
+        public void onSuccess(Message message) {
+            LogUtils.i("onSuccess");
+        }
+
+        @Override
+        public void onProgress(Message message, int i) {
+            LogUtils.i("onProgress:" + i);
+        }
+    };
+
+
+    /**
+     * 发送图片消息
+     *
+     * @param targetId 对方ID
+     * @param file     文件
+     */
+    public void sendImageMessage(String targetId, File file){
+        ImageMessage imageMessage=ImageMessage.obtain (Uri.fromFile (file),Uri.fromFile (file),true);
+        RongIMClient.getInstance ().sendImageMessage (
+                Conversation.ConversationType.PRIVATE,
+                targetId,
+                imageMessage,
+                null,
+                null,
+                sendImageMessageCallback
+        );
     }
 
 

@@ -14,7 +14,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".ui.ChatActivity" android:theme="@style/AppTheme"/>
+        <activity
+            android:name=".ui.ImagePreviewActivity"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"></activity>
+        <activity
+            android:name=".ui.ChatActivity"
+            android:theme="@style/AppTheme" />
         <activity android:name=".ui.NewFriendActivity" />
         <activity android:name=".ui.UserInfoActivity" /> <!-- 离线消息 -->
         <receiver

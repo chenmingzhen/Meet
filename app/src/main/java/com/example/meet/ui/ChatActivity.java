@@ -1,13 +1,16 @@
 package com.example.meet.ui;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.example.framework.adapter.CommonAdapter;
 import com.example.framework.adapter.CommonViewHolder;
@@ -18,6 +21,7 @@ import com.example.framework.entity.Constants;
 import com.example.framework.event.EventManager;
 import com.example.framework.event.MessageEvent;
 import com.example.framework.gson.TextBean;
+import com.example.framework.helper.FileHelper;
 import com.example.framework.utils.CommonUtils;
 import com.example.framework.utils.LogUtils;
 import com.example.meet.R;
@@ -33,9 +37,39 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import io.rong.imlib.RongIMClient;
 import io.rong.imlib.model.Message;
+import io.rong.message.ImageMessage;
 import io.rong.message.TextMessage;
 
 public class ChatActivity extends BaseBackActivity implements View.OnClickListener {
+
+    /**
+     *
+     * 发送文本逻辑
+     * 1.跳转到ChatActivity
+     * 2.实现我们的聊天列表 适配器
+     * 3.加载我们的历史记录
+     * 4.实时更新我们的聊天信息
+     * 5.发送消息
+     */
+
+    /**
+     * 发送图片逻辑
+     * 1.读取(相机和相册)
+     * 2.发送图片消息
+     * 3.完成我们适配器的UI
+     * 4.完成Service的图片接收逻辑
+     * 5.通知UI刷新
+     */
+
+    /**
+     * 发送地址的逻辑
+     * 1.获取地址
+     * 2.发送位置消息
+     * 不能忘记：
+     * 1.历史消息
+     * 2.适配器
+     * 3.发送消息
+     */
 
     //左边
     public static final int TYPE_LEFT_TEXT = 0;
@@ -50,6 +84,7 @@ public class ChatActivity extends BaseBackActivity implements View.OnClickListen
     private static final int LOCATION_REQUEST_CODE = 1888;
 
     private static final int CHAT_INFO_REQUEST_CODE = 1889;
+
 
     /**
      * 跳转
@@ -144,6 +179,45 @@ public class ChatActivity extends BaseBackActivity implements View.OnClickListen
                         viewHolder.setText (R.id.tv_right_text, model.getText ());
                         viewHolder.setImageUrl (ChatActivity.this, R.id.iv_right_photo, meUserPhoto);
                         break;
+                    case TYPE_LEFT_IMAGE:
+                        viewHolder.setImageUrl (ChatActivity.this, R.id.iv_left_img, model.getImgUrl ());
+                        viewHolder.setImageUrl (ChatActivity.this, R.id.iv_left_photo, yourUserPhoto);
+
+                        viewHolder.getView (R.id.iv_left_img).setOnClickListener (new View.OnClickListener () {
+                            @Override
+                            public void onClick(View v) {
+                                ImagePreviewActivity.startActivity (
+                                        ChatActivity.this, true, model.getImgUrl ());
+                            }
+                        });
+                        LogUtils.i ("TYPE_LEFT_IMAGE");
+                        break;
+                    case TYPE_RIGHT_IMAGE:
+                        if (TextUtils.isEmpty (model.getImgUrl ())) {
+                            if (model.getLocalFile () != null) {
+                                //加载本地文件
+                                viewHolder.setImageFile (ChatActivity.this, R.id.iv_right_img, model.getLocalFile ());
+                                viewHolder.getView (R.id.iv_right_img).setOnClickListener (new View.OnClickListener () {
+                                    @Override
+                                    public void onClick(View v) {
+                                        ImagePreviewActivity.startActivity (
+                                                ChatActivity.this, false, model.getLocalFile ().getPath ());
+                                    }
+                                });
+                            }
+                        } else {
+                            viewHolder.setImageUrl (ChatActivity.this, R.id.iv_right_img, model.getImgUrl ());
+                            viewHolder.getView (R.id.iv_right_img).setOnClickListener (new View.OnClickListener () {
+                                @Override
+                                public void onClick(View v) {
+                                    ImagePreviewActivity.startActivity (
+                                            ChatActivity.this, true, model.getImgUrl ());
+                                }
+                            });
+                        }
+                        LogUtils.i ("TYPE_RIGHT_IMAGE");
+                        viewHolder.setImageUrl (ChatActivity.this, R.id.iv_right_photo, meUserPhoto);
+                        break;
                 }
             }
 
@@ -228,6 +302,16 @@ public class ChatActivity extends BaseBackActivity implements View.OnClickListen
                     e.printStackTrace ();
                 }
             } else if (objectName.equals (CloudManager.MSG_IMAGE_NAME)) {
+                ImageMessage imageMessage = (ImageMessage) m.getContent ();
+                String url = imageMessage.getRemoteUri ().toString ();
+                if (!TextUtils.isEmpty (url)) {
+                    LogUtils.i ("url:" + url);
+                    if (m.getSenderUserId ().equals (yourUserId)) {
+                        addImage (0, url);
+                    } else {
+                        addImage (1, url);
+                    }
+                }
 
             } else if (objectName.equals (CloudManager.MSG_LOCATION_NAME)) {
 
@@ -286,6 +370,12 @@ public class ChatActivity extends BaseBackActivity implements View.OnClickListen
                 addText (1, inputText);
                 et_input_msg.setText ("");
                 break;
+            case R.id.ll_camera:
+                FileHelper.getInstance ().toCamera (this);
+                break;
+            case R.id.ll_pic:
+                FileHelper.getInstance ().toAlbum (this);
+                break;
         }
     }
 
@@ -319,6 +409,42 @@ public class ChatActivity extends BaseBackActivity implements View.OnClickListen
         baseAddItem (model);
     }
 
+
+    /**
+     * 添加图片
+     *
+     * @param index
+     * @param url
+     */
+    private void addImage(int index, String url) {
+        ChatModel model = new ChatModel ();
+        if (index == 0) {
+            model.setType (TYPE_LEFT_IMAGE);
+        } else {
+            model.setType (TYPE_RIGHT_IMAGE);
+        }
+        model.setImgUrl (url);
+        baseAddItem (model);
+    }
+
+    /**
+     * 添加本地图片 用于发送后右边的显示
+     *
+     * @param index
+     * @param file
+     */
+    private void addImage(int index, File file) {
+        ChatModel model = new ChatModel ();
+        if (index == 0) {
+            model.setType (TYPE_LEFT_IMAGE);
+        } else {
+            model.setType (TYPE_RIGHT_IMAGE);
+        }
+        model.setLocalFile (file);
+        baseAddItem (model);
+    }
+
+
     @Override
     public void onMessageEvent(MessageEvent event) {
         super.onMessageEvent (event);
@@ -329,6 +455,37 @@ public class ChatActivity extends BaseBackActivity implements View.OnClickListen
             case EventManager.FLAG_SEND_TEXT:
                 addText (0, event.getText ());
                 break;
+            case EventManager.FLAG_SEND_IMAGE:
+                addImage (0, event.getImgUrl ());
+                break;
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult (requestCode, resultCode, data);
+        if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == FileHelper.CAMEAR_REQUEST_CODE) {
+                uploadFile = FileHelper.getInstance ().getTempFile ();
+            } else if (requestCode == FileHelper.ALBUM_REQUEST_CODE) {
+                Uri uri = data.getData ();
+                if (uri != null) {
+                    //String path = uri.getPath();
+                    //获取真实的地址
+                    String path = FileHelper.getInstance ().getRealPathFromURI (this, uri);
+                    //LogUtils.e("path:" + path);
+                    if (!TextUtils.isEmpty (path)) {
+                        uploadFile = new File (path);
+                    }
+                }
+            }
+
+            if (uploadFile != null) {
+                //发送图片消息
+                CloudManager.getInstance ().sendImageMessage (yourUserId, uploadFile);
+                addImage (1, uploadFile);
+                uploadFile = null;
+            }
         }
     }
 }
