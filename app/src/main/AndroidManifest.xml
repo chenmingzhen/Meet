@@ -14,9 +14,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar"
         tools:ignore="GoogleAppIndexingWarning">
+        <activity android:name=".ui.LocationActivity"
+            android:theme="@style/AppTheme"/>
         <activity
             android:name=".ui.ImagePreviewActivity"
-            android:theme="@style/Theme.AppCompat.Light.NoActionBar"></activity>
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar" />
         <activity
             android:name=".ui.ChatActivity"
             android:theme="@style/AppTheme" />
@@ -66,7 +68,10 @@
             android:value="portrait|landscape" /> <!-- Oppo适配 -->
         <meta-data
             android:name="android.max_aspect"
-            android:value="2.2" /> <!-- Bmob -->
+            android:value="2.2" /> <!-- 高德地图 -->
+        <meta-data
+            android:name="com.amap.api.v2.apikey"
+            android:value="9461a0d54dbe38c299a601c8889e5e73" /> <!-- Bmob -->
         <provider
             android:name="cn.bmob.v3.util.BmobContentProvider"
             android:authorities="com.example.meet.BmobContentProvider" /> <!-- FileProvide -->

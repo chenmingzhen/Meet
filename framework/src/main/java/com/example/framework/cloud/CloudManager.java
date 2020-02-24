@@ -15,6 +15,7 @@ import io.rong.imlib.RongIMClient;
 import io.rong.imlib.model.Conversation;
 import io.rong.imlib.model.Message;
 import io.rong.message.ImageMessage;
+import io.rong.message.LocationMessage;
 import io.rong.message.TextMessage;
 
 /**
@@ -241,6 +242,22 @@ public class CloudManager {
                 null,
                 sendImageMessageCallback
         );
+    }
+
+    /**
+     * 发送位置信息
+     *
+     * @param mTargetId
+     * @param lat
+     * @param lng
+     * @param poi
+     */
+    public void sendLocationMessage(String mTargetId, double lat, double lng, String poi) {
+        LocationMessage locationMessage = LocationMessage.obtain(lat, lng, poi, null);
+        io.rong.imlib.model.Message message = io.rong.imlib.model.Message.obtain(
+                mTargetId, Conversation.ConversationType.PRIVATE, locationMessage);
+        RongIMClient.getInstance().sendLocationMessage(message,
+                null, null, iSendMessageCallback);
     }
 
 

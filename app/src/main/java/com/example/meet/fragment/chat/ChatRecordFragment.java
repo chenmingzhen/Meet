@@ -190,8 +190,6 @@ public class ChatRecordFragment extends BaseFragment implements SwipeRefreshLayo
     @Override
     public void onResume() {
         super.onResume ();
-        if (mChatRecordRefreshLayout.isRefreshing ()) {
             queryChatRecord ();
-        }
     }
 }

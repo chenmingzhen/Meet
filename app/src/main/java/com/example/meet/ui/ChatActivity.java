@@ -10,7 +10,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import com.example.framework.adapter.CommonAdapter;
 import com.example.framework.adapter.CommonViewHolder;
@@ -22,6 +21,7 @@ import com.example.framework.event.EventManager;
 import com.example.framework.event.MessageEvent;
 import com.example.framework.gson.TextBean;
 import com.example.framework.helper.FileHelper;
+import com.example.framework.manager.MapManager;
 import com.example.framework.utils.CommonUtils;
 import com.example.framework.utils.LogUtils;
 import com.example.meet.R;
@@ -38,6 +38,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import io.rong.imlib.RongIMClient;
 import io.rong.imlib.model.Message;
 import io.rong.message.ImageMessage;
+import io.rong.message.LocationMessage;
 import io.rong.message.TextMessage;
 
 public class ChatActivity extends BaseBackActivity implements View.OnClickListener {
@@ -218,6 +219,35 @@ public class ChatActivity extends BaseBackActivity implements View.OnClickListen
                         LogUtils.i ("TYPE_RIGHT_IMAGE");
                         viewHolder.setImageUrl (ChatActivity.this, R.id.iv_right_photo, meUserPhoto);
                         break;
+                    case TYPE_LEFT_LOCATION:
+                        viewHolder.setImageUrl (ChatActivity.this, R.id.iv_left_photo, yourUserPhoto);
+                        viewHolder.setImageUrl (ChatActivity.this, R.id.iv_left_location_img
+                                , model.getMapUrl ());
+                        viewHolder.setText (R.id.tv_left_address, model.getAddress ());
+
+                        viewHolder.itemView.setOnClickListener (new View.OnClickListener () {
+                            @Override
+                            public void onClick(View v) {
+                                LocationActivity.startActivity (ChatActivity.this, false,
+                                        model.getLa (), model.getLo (), model.getAddress (), LOCATION_REQUEST_CODE);
+                            }
+                        });
+
+                        break;
+                    case TYPE_RIGHT_LOCATION:
+                        viewHolder.setImageUrl (ChatActivity.this, R.id.iv_right_photo, meUserPhoto);
+                        viewHolder.setImageUrl (ChatActivity.this,
+                                R.id.iv_right_location_img, model.getMapUrl ());
+                        viewHolder.setText (R.id.tv_right_address, model.getAddress ());
+
+                        viewHolder.itemView.setOnClickListener (new View.OnClickListener () {
+                            @Override
+                            public void onClick(View v) {
+                                LocationActivity.startActivity (ChatActivity.this, false,
+                                        model.getLa (), model.getLo (), model.getAddress (), LOCATION_REQUEST_CODE);
+                            }
+                        });
+                        break;
                 }
             }
 
@@ -314,7 +344,14 @@ public class ChatActivity extends BaseBackActivity implements View.OnClickListen
                 }
 
             } else if (objectName.equals (CloudManager.MSG_LOCATION_NAME)) {
-
+                LocationMessage locationMessage = (LocationMessage) m.getContent ();
+                if (m.getSenderUserId ().equals (yourUserId)) {
+                    addLocation (0, locationMessage.getLat (),
+                            locationMessage.getLng (), locationMessage.getPoi ());
+                } else {
+                    addLocation (1, locationMessage.getLat (),
+                            locationMessage.getLng (), locationMessage.getPoi ());
+                }
             }
         }
     }
@@ -375,6 +412,9 @@ public class ChatActivity extends BaseBackActivity implements View.OnClickListen
                 break;
             case R.id.ll_pic:
                 FileHelper.getInstance ().toAlbum (this);
+                break;
+            case R.id.ll_location:
+                LocationActivity.startActivity (this, true, 0, 0, "", LOCATION_REQUEST_CODE);
                 break;
         }
     }
@@ -444,6 +484,28 @@ public class ChatActivity extends BaseBackActivity implements View.OnClickListen
         baseAddItem (model);
     }
 
+    /**
+     * 添加地址
+     *
+     * @param index
+     * @param la
+     * @param lo
+     * @param address
+     */
+    private void addLocation(int index, double la, double lo, String address) {
+        ChatModel model = new ChatModel ();
+        if (index == 0) {
+            model.setType (TYPE_LEFT_LOCATION);
+        } else {
+            model.setType (TYPE_RIGHT_LOCATION);
+        }
+        model.setLa (la);
+        model.setLo (lo);
+        model.setAddress (address);
+        model.setMapUrl (MapManager.getInstance ().getMapUrl (la, lo));
+        baseAddItem (model);
+    }
+
 
     @Override
     public void onMessageEvent(MessageEvent event) {
@@ -457,6 +519,9 @@ public class ChatActivity extends BaseBackActivity implements View.OnClickListen
                 break;
             case EventManager.FLAG_SEND_IMAGE:
                 addImage (0, event.getImgUrl ());
+                break;
+            case EventManager.FLAG_SEND_LOCATION:
+                addLocation (0, event.getLa (), event.getLo (), event.getAddress ());
                 break;
         }
     }
@@ -477,6 +542,29 @@ public class ChatActivity extends BaseBackActivity implements View.OnClickListen
                     if (!TextUtils.isEmpty (path)) {
                         uploadFile = new File (path);
                     }
+                }
+            } else if (requestCode == LOCATION_REQUEST_CODE) {
+                double la = data.getDoubleExtra ("la", 0);
+                double lo = data.getDoubleExtra ("lo", 0);
+                String address = data.getStringExtra ("address");
+
+                LogUtils.i ("la:" + la);
+                LogUtils.i ("lo:" + lo);
+                LogUtils.i ("address:" + address);
+
+                if (TextUtils.isEmpty (address)) {
+                    MapManager.getInstance ().poi2address (la, lo, new MapManager.OnPoi2AddressGeocodeListener () {
+                        @Override
+                        public void poi2address(String address) {
+                            //发送位置消息
+                            CloudManager.getInstance ().sendLocationMessage (yourUserId, la, lo, address);
+                            addLocation (1, la, lo, address);
+                        }
+                    });
+                } else {
+                    //发送位置消息
+                    CloudManager.getInstance ().sendLocationMessage (yourUserId, la, lo, address);
+                    addLocation (1, la, lo, address);
                 }
             }
 

@@ -33,6 +33,7 @@ import io.reactivex.schedulers.Schedulers;
 import io.rong.imlib.RongIMClient;
 import io.rong.imlib.model.Message;
 import io.rong.message.ImageMessage;
+import io.rong.message.LocationMessage;
 import io.rong.message.TextMessage;
 
 public class CloudService extends Service implements View.OnClickListener {
@@ -135,17 +136,27 @@ public class CloudService extends Service implements View.OnClickListener {
             try {
                 ImageMessage imageMessage = (ImageMessage) message.getContent ();
                 String url = imageMessage.getRemoteUri ().toString ();
-                if(!TextUtils.isEmpty (url)){
-                    LogUtils.i("url:" + url);
-                    MessageEvent messageEvent=new MessageEvent (EventManager.FLAG_SEND_IMAGE);
+                if (!TextUtils.isEmpty (url)) {
+                    LogUtils.i ("url:" + url);
+                    MessageEvent messageEvent = new MessageEvent (EventManager.FLAG_SEND_IMAGE);
                     messageEvent.setImgUrl (url);
-                    messageEvent.setUserId(message.getSenderUserId());
-                    EventManager.post(messageEvent);
+                    messageEvent.setUserId (message.getSenderUserId ());
+                    EventManager.post (messageEvent);
                 }
             } catch (Exception e) {
                 LogUtils.e ("e." + e.toString ());
                 e.printStackTrace ();
             }
+        } else if (objectName.equals (CloudManager.MSG_LOCATION_NAME)) {
+            LocationMessage locationMessage = (LocationMessage) message.getContent ();
+            LogUtils.e ("locationMessage:" + locationMessage.toString ());
+            MessageEvent event = new MessageEvent (EventManager.FLAG_SEND_LOCATION);
+            event.setLa (locationMessage.getLat ());
+            event.setLo (locationMessage.getLng ());
+            event.setUserId (message.getSenderUserId ());
+            event.setAddress (locationMessage.getPoi ());
+            EventManager.post (event);
+            //pushSystem (message.getSenderUserId (), 1, 0, 0, getString (R.string.text_chat_record_location));
         }
 
     }

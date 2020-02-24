@@ -20,6 +20,9 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         //调试 只编译res下的这些文件
         resConfigs("xxhdpi")
+        ndk {
+            abiFilters "armeabi-v7a", "arm64-v8a","armeabi", "x86","x86_64"
+        }
     }
     buildTypes {
         //定义Gradle常量
