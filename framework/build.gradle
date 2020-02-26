@@ -67,4 +67,7 @@ dependencies {
     api rootProject.ext.dependencies["zxing"]
     api rootProject.ext.dependencies["videoplayer"]
     api project(path: ':IMLib')
+
+    /*使用jar包*/
+    api files('libs/Msc.jar')
 }

@@ -10,7 +10,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import com.example.framework.adapter.CommonAdapter;
 import com.example.framework.adapter.CommonViewHolder;
@@ -21,12 +20,17 @@ import com.example.framework.entity.Constants;
 import com.example.framework.event.EventManager;
 import com.example.framework.event.MessageEvent;
 import com.example.framework.gson.TextBean;
+import com.example.framework.gson.VoiceBean;
 import com.example.framework.helper.FileHelper;
+import com.example.framework.manager.VoiceManager;
 import com.example.framework.utils.CommonUtils;
 import com.example.framework.utils.LogUtils;
 import com.example.meet.R;
 import com.example.meet.model.ChatModel;
 import com.google.gson.Gson;
+import com.iflytek.cloud.RecognizerResult;
+import com.iflytek.cloud.SpeechError;
+import com.iflytek.cloud.ui.RecognizerDialogListener;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -375,6 +379,33 @@ public class ChatActivity extends BaseBackActivity implements View.OnClickListen
                 break;
             case R.id.ll_pic:
                 FileHelper.getInstance ().toAlbum (this);
+                break;
+            case R.id.ll_voice:
+                VoiceManager.getInstance (ChatActivity.this).startSpeak (new RecognizerDialogListener () {
+                    @Override
+                    public void onResult(RecognizerResult recognizerResult, boolean b) {
+                        String result = recognizerResult.getResultString ();
+                        if (!TextUtils.isEmpty (result)) {
+                            LogUtils.i ("result:" + result);
+                            VoiceBean voiceBean = new Gson ().fromJson (result, VoiceBean.class);
+                            if (voiceBean.isLs ()) {
+                                StringBuffer sb = new StringBuffer ();
+                                for (int i = 0; i < voiceBean.getWs ().size (); i++) {
+                                    VoiceBean.WsBean wsBean = voiceBean.getWs ().get (i);
+                                    String sResult = wsBean.getCw ().get (0).getW ();
+                                    sb.append (sResult);
+                                }
+                                LogUtils.i ("result:" + sb.toString ());
+                                et_input_msg.setText (sb.toString ());
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onError(SpeechError speechError) {
+                        LogUtils.e ("speechError:" + speechError.toString ());
+                    }
+                });
                 break;
         }
     }
