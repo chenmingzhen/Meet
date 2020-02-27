@@ -1,0 +1,66 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="io.rong.calllib.test" >
+4
+5    <uses-sdk
+5-->D:\Android\Meet\CallLib\build\intermediates\tmp\manifest\androidTest\debug\manifestMerger668680246440469876.xml:5:5-74
+6        android:minSdkVersion="21"
+6-->D:\Android\Meet\CallLib\build\intermediates\tmp\manifest\androidTest\debug\manifestMerger668680246440469876.xml:5:15-41
+7        android:targetSdkVersion="29" />
+7-->D:\Android\Meet\CallLib\build\intermediates\tmp\manifest\androidTest\debug\manifestMerger668680246440469876.xml:5:42-71
+8
+9    <instrumentation
+9-->D:\Android\Meet\CallLib\build\intermediates\tmp\manifest\androidTest\debug\manifestMerger668680246440469876.xml:11:5-15:70
+10        android:name="android.test.InstrumentationTestRunner"
+10-->D:\Android\Meet\CallLib\build\intermediates\tmp\manifest\androidTest\debug\manifestMerger668680246440469876.xml:11:22-75
+11        android:functionalTest="false"
+11-->D:\Android\Meet\CallLib\build\intermediates\tmp\manifest\androidTest\debug\manifestMerger668680246440469876.xml:14:22-52
+12        android:handleProfiling="false"
+12-->D:\Android\Meet\CallLib\build\intermediates\tmp\manifest\androidTest\debug\manifestMerger668680246440469876.xml:13:22-53
+13        android:label="Tests for io.rong.calllib.test"
+13-->D:\Android\Meet\CallLib\build\intermediates\tmp\manifest\androidTest\debug\manifestMerger668680246440469876.xml:15:22-68
+14        android:targetPackage="io.rong.calllib.test" />
+14-->D:\Android\Meet\CallLib\build\intermediates\tmp\manifest\androidTest\debug\manifestMerger668680246440469876.xml:12:22-66
+15
+16    <uses-permission android:name="android.permission.CAMERA" />
+16-->[__tested_artifact__::CallLib] D:\Android\Meet\CallLib\build\intermediates\library_manifest\debug\AndroidManifest.xml:11:5-65
+16-->[__tested_artifact__::CallLib] D:\Android\Meet\CallLib\build\intermediates\library_manifest\debug\AndroidManifest.xml:11:22-62
+17    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+17-->[__tested_artifact__::CallLib] D:\Android\Meet\CallLib\build\intermediates\library_manifest\debug\AndroidManifest.xml:12:5-79
+17-->[__tested_artifact__::CallLib] D:\Android\Meet\CallLib\build\intermediates\library_manifest\debug\AndroidManifest.xml:12:22-76
+18    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+18-->[__tested_artifact__::CallLib] D:\Android\Meet\CallLib\build\intermediates\library_manifest\debug\AndroidManifest.xml:13:5-80
+18-->[__tested_artifact__::CallLib] D:\Android\Meet\CallLib\build\intermediates\library_manifest\debug\AndroidManifest.xml:13:22-77
+19    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+19-->[__tested_artifact__::CallLib] D:\Android\Meet\CallLib\build\intermediates\library_manifest\debug\AndroidManifest.xml:14:5-71
+19-->[__tested_artifact__::CallLib] D:\Android\Meet\CallLib\build\intermediates\library_manifest\debug\AndroidManifest.xml:14:22-68
+20    <uses-permission android:name="android.permission.BLUETOOTH" />
+20-->[__tested_artifact__::CallLib] D:\Android\Meet\CallLib\build\intermediates\library_manifest\debug\AndroidManifest.xml:15:5-68
+20-->[__tested_artifact__::CallLib] D:\Android\Meet\CallLib\build\intermediates\library_manifest\debug\AndroidManifest.xml:15:22-65
+21    <uses-permission android:name="android.permission.INTERNET" />
+21-->[__tested_artifact__::CallLib] D:\Android\Meet\CallLib\build\intermediates\library_manifest\debug\AndroidManifest.xml:16:5-67
+21-->[__tested_artifact__::CallLib] D:\Android\Meet\CallLib\build\intermediates\library_manifest\debug\AndroidManifest.xml:16:22-64
+22    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+22-->[__tested_artifact__::CallLib] D:\Android\Meet\CallLib\build\intermediates\library_manifest\debug\AndroidManifest.xml:17:5-81
+22-->[__tested_artifact__::CallLib] D:\Android\Meet\CallLib\build\intermediates\library_manifest\debug\AndroidManifest.xml:17:22-78
+23    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+23-->[__tested_artifact__::CallLib] D:\Android\Meet\CallLib\build\intermediates\library_manifest\debug\AndroidManifest.xml:18:5-79
+23-->[__tested_artifact__::CallLib] D:\Android\Meet\CallLib\build\intermediates\library_manifest\debug\AndroidManifest.xml:18:22-76
+24    <uses-permission android:name="android.permission.CAPTURE_VIDEO_OUTPUT" />
+24-->[__tested_artifact__::CallLib] D:\Android\Meet\CallLib\build\intermediates\library_manifest\debug\AndroidManifest.xml:19:5-79
+24-->[__tested_artifact__::CallLib] D:\Android\Meet\CallLib\build\intermediates\library_manifest\debug\AndroidManifest.xml:19:22-76
+25
+26    <application
+26-->D:\Android\Meet\CallLib\build\intermediates\tmp\manifest\androidTest\debug\manifestMerger668680246440469876.xml:7:5-9:19
+27        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+27-->[androidx.core:core:1.0.0] C:\Users\陈名振\.gradle\caches\transforms-2\files-2.1\f53e8a61b94db7cd6af4581298ac9d0d\core-1.0.0\AndroidManifest.xml:22:18-86
+28        android:debuggable="true"
+28-->D:\Android\Meet\CallLib\build\intermediates\tmp\manifest\androidTest\debug\manifestMerger668680246440469876.xml:7:18-43
+29        android:supportsRtl="true" >
+29-->[__tested_artifact__::CallLib] D:\Android\Meet\CallLib\build\intermediates\library_manifest\debug\AndroidManifest.xml:21:18-44
+30        <uses-library android:name="android.test.runner" />
+30-->D:\Android\Meet\CallLib\build\intermediates\tmp\manifest\androidTest\debug\manifestMerger668680246440469876.xml:8:9-60
+30-->D:\Android\Meet\CallLib\build\intermediates\tmp\manifest\androidTest\debug\manifestMerger668680246440469876.xml:8:23-57
+31    </application>
+32
+33</manifest>

@@ -70,4 +70,5 @@ dependencies {
 
     /*使用jar包*/
     api files('libs/Msc.jar')
+    api project(path: ':CallLib')
 }
